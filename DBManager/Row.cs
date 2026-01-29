@@ -16,7 +16,8 @@ namespace DbManager
         public Row(List<ColumnDefinition> columnDefinitions, List<string> values)
         {
             //TODO DEADLINE 1.A: Initialize member variables
-
+            this.Values = values;
+            this.ColumnDefinitions = columnDefinitions;
             
         }
 
@@ -30,9 +31,12 @@ namespace DbManager
         public string GetValue(string columnName)
         {
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
-
+            for(int i = 0; i <= ColumnDefinitions.Count; i++)
+            {
+                //resultado = Values.Contains(columnName).ToString();
+            }
             
-            return null;
+            return columnName;
             
         }
 
@@ -52,6 +56,8 @@ namespace DbManager
         private static string Encode(string value)
         {
             //TODO DEADLINE 1.C: Encode the delimiter in value
+            //si el nombre tiene espacio lo guardamos etc, codificamos con la inversa
+            //con las llaves space o lo que hayhamos usado y lo que da (no entiendo)
 
             
             return null;
