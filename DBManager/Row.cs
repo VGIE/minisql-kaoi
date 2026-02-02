@@ -24,8 +24,13 @@ namespace DbManager
         public void SetValue(string columnName, string value)
         {
             //TODO DEADLINE 1.A: Given a column name and value, change the value in that column
-
-            
+            for (int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                if (ColumnDefinitions[i].Name == columnName)
+                {
+                    Values[i]=value;
+                }
+            }
         }
 
         public string GetValue(string columnName)
@@ -33,10 +38,14 @@ namespace DbManager
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
             for(int i = 0; i <= ColumnDefinitions.Count; i++)
             {
+                if(ColumnDefinitions[i].Name == columnName)
+                {
+                   return Values[i];
+                }
                 //resultado = Values.Contains(columnName).ToString();
             }
-            
-            return columnName;
+
+            return null;
             
         }
 
