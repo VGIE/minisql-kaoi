@@ -80,6 +80,22 @@ namespace OurTests
              Assert.Same(col[0],result);
 
         }
+
+        [Fact]
+        public void TestNumColumns()
+        {
+             List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "NamePrueba1"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            };
+
+            Table table = new Table("nameprueba", col);
+
+            int result = table.NumColumns();
+
+            Assert.Equal(2, result);
+        }
         
     }
 }
