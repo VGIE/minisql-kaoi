@@ -96,6 +96,22 @@ namespace OurTests
 
             Assert.Equal(2, result);
         }
+
+        [Fact]
+         public void TestColumnByName() 
+         { 
+            List<ColumnDefinition> col = new List<ColumnDefinition>() 
+            { 
+                new ColumnDefinition(ColumnDefinition.DataType.String, "NamePrueba1"), 
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            }; 
+
+            Table table = new Table("nameprueba", col);
+
+            ColumnDefinition result = table.ColumnByName("Num");
+
+            Assert.Equal("Num", result.Name); 
+        }
         
     }
 }
