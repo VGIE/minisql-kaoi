@@ -63,6 +63,23 @@ namespace OurTests
 
             Assert.Equal(1, result);
         }
+
+        [Fact]
+        public void TestGetColumn()
+        {
+             List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "NamePrueba1"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            };
+
+             Table table = new Table("nameprueba", col);
+
+             ColumnDefinition result = table.GetColumn(0);
+
+             Assert.Same(col[0],result);
+
+        }
         
     }
 }

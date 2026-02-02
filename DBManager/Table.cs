@@ -45,7 +45,7 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return the i-th column
             
-            return null;
+            return ColumnDefinitions[i];
             
         }
 
