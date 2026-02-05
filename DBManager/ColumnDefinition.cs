@@ -15,7 +15,9 @@ namespace DbManager
         public ColumnDefinition(DataType type, string name)
         {
             //TODO DEADLINE 1.A: Initialize member variables
-            
+            this.Type = type;
+
+            this.Name = name;
         }
 
         private const string Delimiter = "->";
@@ -24,17 +26,23 @@ namespace DbManager
         private static string Encode(string value)
         {
             //TODO DEADLINE 1.C: Encode the delimiter in the value
-            
-            return null;
+            if(value == null)
+            {
+               return null; 
+            }
+             return value.Replace(Delimiter, DelimiterEncoded);
             
         }
 
         private static string Decode(string value)
         {
             //TODO DEADLINE 1.C: Decode the delimiter in the value
+            if(value == null)
+            {
+                return null;
+            }
             
-            return null;
-            
+            return value.Replace(DelimiterEncoded, Delimiter);
         }
 
         public string AsText()
