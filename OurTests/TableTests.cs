@@ -112,6 +112,22 @@ namespace OurTests
 
             Assert.Equal("Num", result.Name); 
         }
+
+        [Fact]
+        public void TestColumnIndexByName()
+        {
+            List<ColumnDefinition> col = new List<ColumnDefinition>() 
+            { 
+                new ColumnDefinition(ColumnDefinition.DataType.String, "NamePrueba1"), 
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            }; 
+
+            Table table = new Table("nameprueba", col);
+
+            int result = table.ColumnIndexByName("NamePrueba1");
+
+            Assert.Equal(0, result); 
+        }
         
     }
 }
