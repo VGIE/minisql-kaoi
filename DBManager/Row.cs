@@ -54,6 +54,18 @@ namespace DbManager
             //TODO DEADLINE 1.A: Given a condition (column name, operator and literal value, return whether it is true or not
             //for this row. Check Condition.IsTrue method
 
+            string value = GetValue(condition.ColumnName);
+            ColumnDefinition definition = null;
+            for (int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                if (ColumnDefinitions[i].Name == condition.ColumnName)
+                {
+                    definition = ColumnDefinitions[i];
+                }
+            }
+            return false;
+
+        }
             
             return false;
             
