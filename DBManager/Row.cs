@@ -60,13 +60,10 @@ namespace DbManager
             {
                 if (ColumnDefinitions[i].Name == condition.ColumnName)
                 {
-                    definition = ColumnDefinitions[i];
+                    return condition.IsTrue(value, ColumnDefinitions[i].Type);
+
                 }
             }
-            return false;
-
-        }
-            
             return false;
             
         }
