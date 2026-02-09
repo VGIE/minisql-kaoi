@@ -111,7 +111,7 @@ namespace OurTests
             ColumnDefinition result = table.ColumnByName("Num");
 
             Assert.Equal("Num", result.Name); 
-        }
-        
+         }
     }
+    
 }

@@ -5,10 +5,16 @@ namespace OurTests
         //TODO DEADLINE 1A : Create your own tests for Table
         /*
         [Fact]
+        
         public void Test1()
         {
-
+            
         }
         */
+        
+        public void test()
+        {
+            
+        }
     }
 }
