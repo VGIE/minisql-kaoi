@@ -123,8 +123,8 @@ namespace DbManager
                     {
                         result += ",";
                     }
-                    result += "}";
                 }
+                result += "}";
             }
             return result;
             
