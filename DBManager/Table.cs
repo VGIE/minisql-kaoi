@@ -1,6 +1,7 @@
 using DbManager.Parser;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DbManager
 {
@@ -139,8 +140,16 @@ namespace DbManager
         private List<int> RowIndicesWhereConditionIsTrue(Condition condition)
         {
             //TODO DEADLINE 1.A: Returns the indices of all the rows where the condition is true. Check Row.IsTrue()
-            
-            return null;
+            List<int> indextrue = new List<int>();
+            for(int i = 0; i < Rows.Count;i++)
+            {
+                if (Rows[i].IsTrue(condition))
+                {
+                    indextrue.Add(i);
+                }
+
+            }
+            return indextrue;
             
         }
 

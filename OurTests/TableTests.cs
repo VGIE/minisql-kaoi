@@ -111,6 +111,9 @@ namespace OurTests
             ColumnDefinition result = table.ColumnByName("Num");
 
             Assert.Equal("Num", result.Name); 
+<<<<<<< HEAD
+         }
+=======
         }
 
         [Fact]
@@ -193,5 +196,7 @@ namespace OurTests
 
             Assert.Same(rowPrueba, table.GetRow(0));
         }   
+>>>>>>> origin/master
     }
+    
 }
