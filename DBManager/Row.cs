@@ -16,22 +16,35 @@ namespace DbManager
         public Row(List<ColumnDefinition> columnDefinitions, List<string> values)
         {
             //TODO DEADLINE 1.A: Initialize member variables
-
+            this.Values = values;
+            this.ColumnDefinitions = columnDefinitions;
             
         }
 
         public void SetValue(string columnName, string value)
         {
             //TODO DEADLINE 1.A: Given a column name and value, change the value in that column
-
-            
+            for (int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                if (ColumnDefinitions[i].Name == columnName)
+                {
+                    Values[i]=value;
+                }
+            }
         }
 
         public string GetValue(string columnName)
         {
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
+            for(int i = 0; i <= ColumnDefinitions.Count; i++)
+            {
+                if(ColumnDefinitions[i].Name == columnName)
+                {
+                   return Values[i];
+                }
+                //resultado = Values.Contains(columnName).ToString();
+            }
 
-            
             return null;
             
         }
@@ -41,7 +54,15 @@ namespace DbManager
             //TODO DEADLINE 1.A: Given a condition (column name, operator and literal value, return whether it is true or not
             //for this row. Check Condition.IsTrue method
 
-            
+            string value = GetValue(condition.ColumnName);
+            for (int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                if (ColumnDefinitions[i].Name == condition.ColumnName)
+                {
+                    return condition.IsTrue(value, ColumnDefinitions[i].Type);
+
+                }
+            }
             return false;
             
         }
@@ -52,6 +73,8 @@ namespace DbManager
         private static string Encode(string value)
         {
             //TODO DEADLINE 1.C: Encode the delimiter in value
+            //si el nombre tiene espacio lo guardamos etc, codificamos con la inversa
+            //con las llaves space o lo que hayhamos usado y lo que da (no entiendo)
 
             
             return null;
