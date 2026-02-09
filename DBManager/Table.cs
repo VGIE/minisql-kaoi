@@ -57,9 +57,10 @@ namespace DbManager
             
         }
         
-        public ColumnDefinition ColumnByName(string column) {
+        public ColumnDefinition ColumnByName(string column) 
+        {
         //TODO DEADLINE 1.A: Return the number of columns 
-          for(int i = 0; i <= ColumnDefinitions.Count; i++) 
+          for(int i = 0; i < ColumnDefinitions.Count; i++) 
             { 
                 if(ColumnDefinitions[i].Name == column)
                 {
@@ -72,7 +73,13 @@ namespace DbManager
         public int ColumnIndexByName(string columnName)
         {
             //TODO DEADLINE 1.A: Return the zero-based index of the column named columnName
-            
+            for(int i = 0; 1 < ColumnDefinitions.Count; i++)
+            {
+               if(ColumnDefinitions[i].Name == columnName)
+                {
+                    return i;
+                }
+            }
             return -1;
             
         }
@@ -87,7 +94,39 @@ namespace DbManager
             //"" <- no columns, no rows
             //"['Name']" <- one column, no rows
             
-            return null;
+            if(ColumnDefinitions.Count == 0)
+                return "";
+            
+
+            string result = "[";
+
+            for(int i = 0; i < ColumnDefinitions.Count; i++)
+            {
+                result += "'" + ColumnDefinitions[i].Name + "'";
+
+                if(i < ColumnDefinitions.Count - 1)
+                {
+                    result += ",";
+                }
+            }
+            result += "]";
+
+            foreach(Row row in Rows)
+            {
+                result += "{";
+
+                for(int i = 0; i < row.Values.Count; i++)
+                {
+                    result += "'" + row.Values[i] + "'";
+
+                    if(i < row.Values.Count - 1)
+                    {
+                        result += ",";
+                    }
+                    result += "}";
+                }
+            }
+            return result;
             
         }
 

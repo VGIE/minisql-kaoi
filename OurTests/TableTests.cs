@@ -112,7 +112,65 @@ namespace OurTests
 
             Assert.Equal("Num", result.Name); 
         }
+
+        [Fact]
+        public void TestColumnIndexByName()
+        {
+            List<ColumnDefinition> col = new List<ColumnDefinition>() 
+            { 
+                new ColumnDefinition(ColumnDefinition.DataType.String, "NamePrueba1"), 
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            }; 
+
+            Table table = new Table("nameprueba", col);
+
+            int result = table.ColumnIndexByName("NamePrueba1");
+
+            Assert.Equal(0, result); 
+        }
         
+        [Fact]
+        public void TestToString()
+        {
+            // Case 1: NO colomuns
+            List<ColumnDefinition> empty = new List<ColumnDefinition>();
+            Table emptyTable = new Table("empty", empty);
+
+            Assert.Equal("", emptyTable.ToString());
+
+            // Case 2: One column, no rows
+            List<ColumnDefinition> one = new List<ColumnDefinition>()
+            {
+              new ColumnDefinition(ColumnDefinition.DataType.String, "Name")
+            };
+
+            Table oneTable = new Table("1", one);
+
+            Assert.Equal("['Name']", oneTable.ToString());
+
+            // Case 3: One column, two rows
+            
+            Table moreRows = new Table("2", one);
+
+            moreRows.AddRow(new Row(one, new List<string> { "Adolfo" }));
+            moreRows.AddRow(new Row(one, new List<string> { "Jacinto" }));
+
+            Assert.Equal("['Name']{'Adolfo'}{'Jacinto'}", moreRows.ToString());
+
+            // Case 4: Two columns, two rows
+            List<ColumnDefinition> twoCol = new List<ColumnDefinition>()
+            {
+              new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+              new ColumnDefinition(ColumnDefinition.DataType.Int, "Age")
+            };
+
+            Table tableTwoCol = new Table("3", twoCol);
+
+            tableTwoCol.AddRow(new Row(twoCol, new List<string> {"Adolfo", "23"}));
+            tableTwoCol.AddRow(new Row(twoCol, new List<string> {"Jacinto", "24"}));
+        
+            Assert.Equal("['Name','Age']{'Adolfo','23'}{'Jacinto','24'}", tableTwoCol.ToString());
+        }
         [Fact]
         public void TestInsert()
         {
