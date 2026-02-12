@@ -1,4 +1,5 @@
 using DbManager;
+using DbManager.Parser;
 using Xunit;
 
 namespace OurTests
@@ -192,7 +193,31 @@ namespace OurTests
             table.AddRow(rowPrueba);
 
             Assert.Same(rowPrueba, table.GetRow(0));
-        }   
+        } 
+        [Fact]
+        public void TestDeleteIth()
+        {
+             List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "salary"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Ainhoa", "23", "2000" });
+            tabla.Insert(new List<string> { "Igor", "26", "5200" });
+            tabla.Insert(new List<string> { "Kevin", "22", "1900" });
+            tabla.Insert(new List<string> { "Oier", "28", "2200" });
+
+            tabla.DeleteWhere(new Condition("Name", "=", "Kevin"));
+
+            Assert.Equal(3, tabla.NumRows());
+
+            tabla.DeleteWhere(new Condition("salary", ">", "2000"));
+
+            Assert.Equal(1, tabla.NumRows());
+        }
+
+          
     }
     
 }
