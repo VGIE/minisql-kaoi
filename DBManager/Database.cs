@@ -26,7 +26,7 @@ namespace DbManager
         public Database(string adminUsername, string adminPassword)
         {
             //DEADLINE 1.B: Initalize the member variables
-            
+            m_username = adminUsername;
         }
 
         public bool AddTable(Table table)

@@ -195,7 +195,7 @@ namespace OurTests
             Assert.Same(rowPrueba, table.GetRow(0));
         } 
         [Fact]
-        public void TestDeleteIth()
+        public void TestDeleteCondition()
         {
              List<ColumnDefinition> columns = new List<ColumnDefinition>();
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
@@ -216,7 +216,33 @@ namespace OurTests
 
             Assert.Equal(1, tabla.NumRows());
         }
+        [Fact]
+        public void TestDeleteByIth()
+        {
+             List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "salary"));
+            Table tabla = new Table("People", columns);
 
+            tabla.Insert(new List<string> { "Ainhoa", "23", "2000" });
+            tabla.Insert(new List<string> { "Igor", "26", "5200" });
+            tabla.Insert(new List<string> { "Kevin", "22", "1900" });
+            tabla.Insert(new List<string> { "Oier", "28", "2200" });
+
+            tabla.DeleteIthRow(1);
+
+            Assert.Equal(3, tabla.NumRows());
+
+            tabla.DeleteIthRow(7);
+
+            Assert.Equal(3, tabla.NumRows());
+
+            tabla.DeleteIthRow(-1);
+
+            Assert.Equal(3, tabla.NumRows());
+
+        }
           
     }
     

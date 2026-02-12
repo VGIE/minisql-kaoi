@@ -134,7 +134,7 @@ namespace DbManager
         public void DeleteIthRow(int row)
         {
             //TODO DEADLINE 1.A: Delete the i-th row. If there is no i-th row, do nothing
-            if(row>=0 || row< Rows.Count)
+            if(row>=0 && row< Rows.Count)
             {
               Rows.RemoveAt(row);  
             }
