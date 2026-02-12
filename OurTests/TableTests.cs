@@ -252,5 +252,58 @@ namespace OurTests
 
             Assert.Equal("['Name','Age','salary']{'Ainhoa','23','2000'}{'Igor','26','5200'}{'KevinActualizado','22','1900'}{'Oier','28','2200'}", tabla.ToString());
         }
+
+        [Fact]
+        public void TableSelectWithoutCondition()
+        {
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Igor", "30" });
+            tabla.Insert(new List<string> { "Kevin", "25" });
+
+            Table resultado = tabla.Select(new List<string> { "Name", "Age" }, null);
+
+            Assert.Equal(2, resultado.NumRows());
+            Assert.Equal("['Name','Age']{'Igor','30'}{'Kevin','25'}", resultado.ToString());
+        }
+
+        [Fact]
+        public void TableUpdateRowsWhereConditionIsTrue()
+        {
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Igor", "30" });
+            tabla.Insert(new List<string> { "Kevin", "25" });
+
+            List<SetValue> cambios = new List<SetValue>();
+            cambios.Add(new SetValue("Age", "20"));
+
+            tabla.Update(cambios, new Condition("Name", "=", "Igor"));
+
+            Assert.Equal("['Name','Age']{'Igor','20'}{'Kevin','25'}", tabla.ToString());
+        }
+
+        [Fact]
+        public void TableSelectWithoutConditionAndDisorderedColumns()
+        {
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "City"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Igor", "30", "Bilbao" });
+            tabla.Insert(new List<string> { "Kevin", "25", "Vitoria" });
+
+            Table result = tabla.Select(new List<string> { "City", "Name" }, null);
+
+            Assert.Equal("['City','Name']{'Bilbao','Igor'}{'Vitoria','Kevin'}", result.ToString());
+        }
 }
 }
