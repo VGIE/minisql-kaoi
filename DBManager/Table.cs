@@ -213,7 +213,22 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
             //return false, otherwise return true
-            return false;
+            //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
+            //return false, otherwise return true
+            if (condition == null)
+                return false;
+            List<int> rowIndices = RowIndicesWhereConditionIsTrue(condition);
+            foreach (int rowIndex in rowIndices)
+            {
+                foreach (SetValue setValue in setValues)
+                {
+                    int columnIndex = ColumnIndexByName(setValue.ColumnName);
+                    if (columnIndex == -1)
+                        throw new Exception("La columna " + setValue.ColumnName + " no existe");
+                    Rows[rowIndex].Values[columnIndex] = setValue.Value;
+                }
+            }
+            return true;
         }
 
 

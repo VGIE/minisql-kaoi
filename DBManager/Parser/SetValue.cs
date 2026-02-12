@@ -14,7 +14,8 @@ namespace DbManager.Parser
         public SetValue(string column, string value)
         {
             //TODO DEADLINE 1A: Initialize member variables
-            
+            ColumnName = column;
+            Value = value;
         }
     }
 }
