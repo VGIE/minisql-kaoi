@@ -216,8 +216,24 @@ namespace OurTests
 
             Assert.Equal(1, tabla.NumRows());
         }
+        [Fact]
+        public void TestSelect()
+        {
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "salary"));
+            Table tabla = new Table("People", columns);
 
-          
+            tabla.Insert(new List<string> { "Ainhoa", "23", "2000" });
+            tabla.Insert(new List<string> { "Igor", "26", "5200" });
+            tabla.Insert(new List<string> { "Kevin", "22", "1900" });
+            tabla.Insert(new List<string> { "Oier", "28", "2200" });
+
+            Table result = tabla.Select(new List<string> { "Name", "Age" }, null);
+            
+            Assert.Equal("['Name','Age']{'Ainhoa','23'}{'Igor','26'}{'Kevin','22'}{'Oier','28'}", result.ToString());
+        }   
     }
     
 }
