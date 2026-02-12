@@ -128,6 +128,23 @@ namespace OurTests
             int result = table.ColumnIndexByName("NamePrueba1");
 
             Assert.Equal(0, result); 
+
+            int result2 = table.ColumnIndexByName("Num");
+
+            Assert.Equal(1, result2);
+
+            int result3 = table.ColumnIndexByName("Patata");
+
+            Assert.Equal(-1, result3);
+
+            List<ColumnDefinition> col2 = new List<ColumnDefinition>();
+
+            Table table2 = new Table("nameprueba2", col2);
+
+            int result4 = table.ColumnIndexByName("Prueba");
+
+            Assert.Equal(-1, result4);
+
         }
         
         [Fact]

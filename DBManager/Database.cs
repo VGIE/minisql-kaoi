@@ -41,6 +41,13 @@ namespace DbManager
         {
             //DEADLINE 1.B: Find and return the table with the given name
             
+            foreach(Table table in Tables)
+            {
+                if(table.Name == tableName)
+                {
+                    return table;
+                }
+            }
             return null;
             
         }

@@ -1,3 +1,5 @@
+using DbManager;
+
 namespace OurTests
 {
     public class UnitTest1
@@ -10,5 +12,21 @@ namespace OurTests
 
         }
         */
+
+        [Fact]
+        public void TestTableByName()
+        {
+             List<ColumnDefinition> col = new List<ColumnDefinition>();
+
+            List<Table> table = new List<Table>()
+            {
+                new Table("table1", col),
+
+            };
+
+           
+
+
+        }
     }
 }
