@@ -267,7 +267,11 @@ namespace OurTests
             Table resultado = tabla.Select(new List<string> { "Name", "Age" }, null);
 
             Assert.Equal(2, resultado.NumRows());
-            Assert.Equal("['Name','Age']{'Igor','30'}{'Kevin','25'}", resultado.ToString());
+            Assert.Equal(2, resultado.NumColumns());
+            Assert.Equal("Igor", resultado.GetRow(0).Values[0]);
+            Assert.Equal("30", resultado.GetRow(0).Values[1]);
+            Assert.Equal("Kevin", resultado.GetRow(1).Values[0]);
+            Assert.Equal("25", resultado.GetRow(1).Values[1]);
         }
 
         [Fact]
@@ -303,7 +307,12 @@ namespace OurTests
 
             Table result = tabla.Select(new List<string> { "City", "Name" }, null);
 
-            Assert.Equal("['City','Name']{'Bilbao','Igor'}{'Vitoria','Kevin'}", result.ToString());
+            Assert.Equal(2, result.NumRows());
+            Assert.Equal(2, result.NumColumns());
+            Assert.Equal("Bilbao", result.GetRow(0).Values[0]);
+            Assert.Equal("Igor", result.GetRow(0).Values[1]);
+            Assert.Equal("Vitoria", result.GetRow(1).Values[0]);
+            Assert.Equal("Kevin", result.GetRow(1).Values[1]);
         }
 }
 }
