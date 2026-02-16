@@ -11,22 +11,32 @@ namespace OurTests
         {
 
         }
-        */
+        */        
 
         [Fact]
-        public void TestTableByName()
+        public void TestAddTableAndTableByName()
         {
-             List<ColumnDefinition> col = new List<ColumnDefinition>();
+            Database database = Database.CreateTestDatabase();
 
-            List<Table> table = new List<Table>()
-            {
-                new Table("table1", col),
+            List<ColumnDefinition> col = new List<ColumnDefinition>();
 
-            };
+            Table table1 = new Table("table1", col);
+            Table table2 = new Table("table2", col);
+            Table table3 = new Table("table3", col);
 
-                       
+            database.AddTable(table1);
+            database.AddTable(table2);
+            database.AddTable(table3);            
 
+            Table result = database.TableByName("table1");
+            Assert.Equal("table1", result.Name);
 
+            Table result2 = database.TableByName("table3");
+            Assert.Equal("table3", result2.Name);
+
+            Table result3 = database.TableByName("patata");
+            Assert.Null(result3);
+    
         }
     }
 }
