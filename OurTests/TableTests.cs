@@ -145,6 +145,10 @@ namespace OurTests
 
             Assert.Equal(-1, result4);
 
+            int result5 = table.ColumnIndexByName(null);
+
+            Assert.Equal(-1, result5);
+
         }
         
         [Fact]
