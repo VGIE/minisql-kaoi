@@ -163,9 +163,9 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
             List<int> toRemove = RowIndicesWhereConditionIsTrue(condition);
-            for(int i =0; i< toRemove.Count; i++)
+            for (int i = toRemove.Count - 1; i >= 0; i--)
             {
-                DeleteIthRow(i);
+                DeleteIthRow(toRemove[i]);
             }
         }
 

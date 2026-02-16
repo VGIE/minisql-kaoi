@@ -314,5 +314,31 @@ namespace OurTests
             Assert.Equal("Vitoria", result.GetRow(1).Values[0]);
             Assert.Equal("Kevin", result.GetRow(1).Values[1]);
         }
+        [Fact]
+        public void TestDeleteConditionDouble()
+        {
+             List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Double, "salary"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Ainhoa", "23", "2000.2" });
+            tabla.Insert(new List<string> { "Igor", "26", "5200.32" });
+            tabla.Insert(new List<string> { "Kevin", "22", "1900.46" });
+            tabla.Insert(new List<string> { "Oier", "28", "2200.89" });
+
+            tabla.DeleteWhere(new Condition("salary", "=", "5200.32"));
+
+            Assert.Equal(3, tabla.NumRows());
+
+            tabla.DeleteWhere(new Condition("salary", ">", "2000.9"));
+
+            Assert.Equal(2, tabla.NumRows());
+        }
+
+        
+
+
 }
 }
