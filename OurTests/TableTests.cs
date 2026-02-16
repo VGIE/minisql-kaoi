@@ -141,7 +141,7 @@ namespace OurTests
 
             Table table2 = new Table("nameprueba2", col2);
 
-            int result4 = table.ColumnIndexByName("Prueba");
+            int result4 = table2.ColumnIndexByName("Prueba");
 
             Assert.Equal(-1, result4);
 
