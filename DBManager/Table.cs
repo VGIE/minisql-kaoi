@@ -173,7 +173,29 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            return null;
+            Table result = new Table("Result", new List<ColumnDefinition>());
+            List<int> columnIndices = new List<int>();
+
+            foreach (string columnName in columnNames)
+            {
+                ColumnDefinition column = ColumnByName(columnName);
+                if (column == null)
+                    throw new Exception("La columna " + columnName + " no existe");
+                result.ColumnDefinitions.Add(column);
+                columnIndices.Add(ColumnIndexByName(columnName));
+            }
+
+            List<int> rowIndices = RowIndicesWhereConditionIsTrue(condition);           
+            foreach (int rowIndex in rowIndices)
+            {
+                List<string> newRowValues = new List<string>();
+                foreach(int colIndex in columnIndices)
+                {
+                    newRowValues.Add(Rows[rowIndex].Values[colIndex]);
+                }
+                result.Rows.Add(new Row(result.ColumnDefinitions, newRowValues));
+            }
+            return result;       
         }
 
         public bool Insert(List<string> values)
@@ -191,7 +213,22 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
             //return false, otherwise return true
-            return false;
+            //TODO DEADLINE 1.A: Update all the rows where the condition is true using all the SetValues (ColumnName-Value). If condition is null,
+            //return false, otherwise return true
+            if (condition == null)
+                return false;
+            List<int> rowIndices = RowIndicesWhereConditionIsTrue(condition);
+            foreach (int rowIndex in rowIndices)
+            {
+                foreach (SetValue setValue in setValues)
+                {
+                    int columnIndex = ColumnIndexByName(setValue.ColumnName);
+                    if (columnIndex == -1)
+                        throw new Exception("La columna " + setValue.ColumnName + " no existe");
+                    Rows[rowIndex].Values[columnIndex] = setValue.Value;
+                }
+            }
+            return true;
         }
 
 
