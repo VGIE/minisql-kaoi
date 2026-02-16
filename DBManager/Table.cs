@@ -74,7 +74,7 @@ namespace DbManager
         public int ColumnIndexByName(string columnName)
         {
             //TODO DEADLINE 1.A: Return the zero-based index of the column named columnName
-            for(int i = 0; 1 < ColumnDefinitions.Count; i++)
+            for(int i = 0; i < ColumnDefinitions.Count; i++)
             {
                if(ColumnDefinitions[i].Name == columnName)
                 {

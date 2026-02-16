@@ -32,8 +32,12 @@ namespace DbManager
         public bool AddTable(Table table)
         {
             //DEADLINE 1.B: Add a new table to the database
+            if(table == null)
+                return false;
+
+            Tables.Add(table);
             
-            return false;
+            return true;
             
         }
 
@@ -41,6 +45,13 @@ namespace DbManager
         {
             //DEADLINE 1.B: Find and return the table with the given name
             
+            foreach(Table table in Tables)
+            {
+                if(table.Name == tableName)
+                {
+                    return table;
+                }
+            }
             return null;
             
         }
