@@ -60,7 +60,7 @@ namespace OurTests
             Assert.Equal("27", testRow.GetValue("Age"));
             Assert.Equal("7.8", testRow.GetValue("Grade"));
             Row testRow1 = TestNull();
-            Assert.Equal("Oier", testRow.GetValue("Name"));
+            Assert.Equal("Oier", testRow1.GetValue("Name"));
             Assert.Null(testRow1.GetValue("Age"));
             Assert.Null(testRow1.GetValue("Grade"));
         }
