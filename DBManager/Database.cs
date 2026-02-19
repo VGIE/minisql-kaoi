@@ -169,11 +169,10 @@ namespace DbManager
                 {
                     Directory.CreateDirectory(databaseName);
                 }
-
-                foreach(Table table in Table)
-                {
-                    
-                }
+            }
+            catch
+            {
+                
             }
             return false;
             
