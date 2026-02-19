@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -111,8 +112,34 @@ namespace DbManager
             //DEADLINE 1.B: Delete all the rows where the condition is true. 
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
+
+            Table table = TableByName(tableName);
             
-            return false;
+            if(table == null)
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return false;
+            }
+            
+            int col = table.ColumnIndexByName(columnCondition.ColumnName);
+
+            if(col == -1)
+            {
+                LastErrorMessage = Constants.ColumnDoesNotExistError;
+                return false;
+            }
+
+            for(int i = table.NumRows() - 1; i >= 0; i--)
+            {
+                Row row = table.GetRow(i);
+
+                if(row.IsTrue(columnCondition))
+                {
+                    table.DeleteIthRow(i);
+                }
+            }
+            LastErrorMessage = Constants.DeleteSuccess;
+            return true;
             
         }
 
