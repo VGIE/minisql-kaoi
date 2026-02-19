@@ -26,23 +26,23 @@ namespace DbManager
         public Database(string adminUsername, string adminPassword)
         {
             //DEADLINE 1.B: Initalize the member variables
-            
+
         }
 
         public bool AddTable(Table table)
         {
             //DEADLINE 1.B: Add a new table to the database
-            
+
             return false;
-            
+
         }
 
         public Table TableByName(string tableName)
         {
             //DEADLINE 1.B: Find and return the table with the given name
-            
+
             return null;
-            
+
         }
 
         public bool CreateTable(string tableName, List<ColumnDefinition> ColumnDefinition)
@@ -51,16 +51,16 @@ namespace DbManager
             //return false and set LastErrorMessage with the appropriate error (Check Constants.cs)
             //Do the same if no column is provided
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
-            
+
             return false;
-            
+
         }
 
         public bool DropTable(string tableName)
         {
             //DEADLINE 1.B: Delete the table with the given name. If the table doesn't exist, return false and set LastErrorMessage
             //If everything goes ok, return true and set LastErrorMessage with the appropriate success message (Check Constants.cs)
-            
+
             return false;
         }
 
@@ -68,9 +68,19 @@ namespace DbManager
         {
             //DEADLINE 1.B: Insert a new row to the table. If it doesn't exist return false and set LastErrorMessage appropriately
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
-            
+            Table table = TableByName(tableName);
+            if (table == null)
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return false;
+            }
+            if (table.Insert(values))
+            {
+                LastErrorMessage = Constants.InsertSuccess;
+                return true;
+            }
+            LastErrorMessage = Constants.ColumnCountsDontMatch;
             return false;
-            
         }
 
         public Table Select(string tableName, List<string> columns, Condition condition)
@@ -78,9 +88,29 @@ namespace DbManager
             //DEADLINE 1.B: Return the result of the select. If the table doesn't exist return null and set LastErrorMessage appropriately (Check Constants.cs)
             //If any of the requested columns doesn't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return the table
-            
-            return null;
-            
+                Table table = TableByName(tableName);
+                if (table == null)
+                {
+                    LastErrorMessage = Constants.TableDoesNotExistError;
+                    return null;
+                }
+                if (columns.Count > 0)
+                {
+                    foreach (string column in columns)
+                    {
+                        if (table.ColumnByName(column) == null)
+                        {
+                            LastErrorMessage = Constants.ColumnDoesNotExistError;
+                            return null;
+                        }
+                    }
+                }
+                else
+                {
+                    LastErrorMessage = Constants.ColumnDoesNotExistError;
+                    return null;
+                }
+                return table.Select(columns, condition);
         }
 
         public bool DeleteWhere(string tableName, Condition columnCondition)
@@ -88,9 +118,9 @@ namespace DbManager
             //DEADLINE 1.B: Delete all the rows where the condition is true. 
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-            
+
             return false;
-            
+
         }
 
         public bool Update(string tableName, List<SetValue> columnNames, Condition columnCondition)
@@ -98,23 +128,23 @@ namespace DbManager
             //DEADLINE 1.B: Update in the given table all the rows where the condition is true using the SetValues
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-            
+
             return false;
-            
+
         }
 
-        
-        
 
-        
+
+
+
         public bool Save(string databaseName)
         {
             //DEADLINE 1.C: Save this database to disk with the given name
             //If everything goes ok, return true, false otherwise.
             //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
-            
+
             return false;
-            
+
         }
 
         public static Database Load(string databaseName, string username, string password)
@@ -123,7 +153,7 @@ namespace DbManager
             //If everything goes ok, return the loaded database (a new instance), null otherwise.
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
-            
+
             return null;
         }
 

@@ -230,9 +230,9 @@ namespace OurTests
             tabla.Insert(new List<string> { "Kevin", "22", "1900" });
             tabla.Insert(new List<string> { "Oier", "28", "2200" });
 
-            Table result = tabla.Select(new List<string> { "Name", "Age" }, null);
+            Table result = tabla.Select(new List<string> { "Name", "Age" }, new Condition("salary", ">", "3000"));
             
-            Assert.Equal("['Name','Age']{'Ainhoa','23'}{'Igor','26'}{'Kevin','22'}{'Oier','28'}", result.ToString());
+            Assert.Equal("['Name','Age']{'Igor','26'}", result.ToString());
         }  
         [Fact]
         public void TestUpdate()
@@ -291,6 +291,23 @@ namespace OurTests
             tabla.Update(cambios, new Condition("Name", "=", "Igor"));
 
             Assert.Equal("['Name','Age']{'Igor','20'}{'Kevin','25'}", tabla.ToString());
+        }
+
+        [Fact]
+        public void TestSelectColumnsNull()
+        {
+            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "City"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Igor", "30", "Bilbao" });
+            tabla.Insert(new List<string> { "Kevin", "25", "Vitoria" });
+
+            Table result = tabla.Select(null, null);
+
+            Assert.Null(result);
         }
 
         [Fact]
