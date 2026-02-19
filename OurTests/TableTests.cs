@@ -336,9 +336,5 @@ namespace OurTests
 
             Assert.Equal(2, tabla.NumRows());
         }
-
-        
-
-
-}
+    }
 }
