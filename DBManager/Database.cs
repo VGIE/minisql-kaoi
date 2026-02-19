@@ -27,7 +27,8 @@ namespace DbManager
         public Database(string adminUsername, string adminPassword)
         {
             //DEADLINE 1.B: Initalize the member variables
-            m_username = adminUsername;
+           m_username = adminUsername;
+
         }
 
         public bool AddTable(Table table)
@@ -63,8 +64,41 @@ namespace DbManager
             //return false and set LastErrorMessage with the appropriate error (Check Constants.cs)
             //Do the same if no column is provided
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
+            bool found = false ;
+            int i = 0;
+
+            if(String.IsNullOrEmpty(tableName))
+            {
+              LastErrorMessage = Constants.TableAlreadyExistsError;  
+              return false;
+            }
+            else if (ColumnDefinition.Count == 0 || ColumnDefinition == null)
+            {
+                LastErrorMessage = Constants.TableAlreadyExistsError; 
+                return false; 
+            }
+            while (i< Tables.Count && !found)
+            {
+               if(Tables[i].Name == tableName)
+                {
+                    found = true;
+                }
+                i++;
+            }
+          
             
-            return false;
+            if (!found)
+            {
+                Table nTable = new Table(tableName, ColumnDefinition);
+                Tables.Add(nTable);
+                LastErrorMessage = Constants. CreateTableSuccess; 
+                return true;
+            }
+            else
+            {
+                LastErrorMessage = Constants.TableAlreadyExistsError;
+                return false;
+            }
             
         }
 
