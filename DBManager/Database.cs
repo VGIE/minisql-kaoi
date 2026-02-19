@@ -197,6 +197,17 @@ namespace DbManager
             //If everything goes ok, return true, false otherwise.
             //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
             
+            try
+            {
+                if(!Directory.Exists(databaseName))
+                {
+                    Directory.CreateDirectory(databaseName);
+                }
+            }
+            catch
+            {
+                
+            }
             return false;
             
         }
