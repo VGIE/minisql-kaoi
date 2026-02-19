@@ -38,9 +38,17 @@ namespace DbManager
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
             for(int i = 0; i <= ColumnDefinitions.Count; i++)
             {
+                //accedo sin comprobar que exitse el indice. Fallo linea 41
                 if(ColumnDefinitions[i].Name == columnName)
                 {
-                   return Values[i];
+                    if (i < Values.Count)
+                    {
+                        return Values[i];
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 //resultado = Values.Contains(columnName).ToString();
             }
