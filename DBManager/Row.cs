@@ -18,6 +18,10 @@ namespace DbManager
             //TODO DEADLINE 1.A: Initialize member variables
             this.Values = values;
             this.ColumnDefinitions = columnDefinitions;
+            while (Values.Count < ColumnDefinitions.Count)
+            {
+                Values.Add(null);
+            }
             
         }
 
@@ -38,7 +42,6 @@ namespace DbManager
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
             for(int i = 0; i <= ColumnDefinitions.Count; i++)
             {
-                //accedo sin comprobar que exitse el indice. Fallo linea 41
                 if(ColumnDefinitions[i].Name == columnName)
                 {
                     if (i < Values.Count)

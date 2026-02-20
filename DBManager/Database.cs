@@ -85,6 +85,7 @@ namespace DbManager
                 return false;
             }
             Tables.Remove(table);
+            LastErrorMessage = Constants.DropTableSuccess;
             return true;
         }
 
