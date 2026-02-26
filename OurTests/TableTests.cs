@@ -7,11 +7,12 @@ namespace OurTests
     public class TableTests
     {
         //TODO DEADLINE 1A : Create your own tests for Table
-        [Fact]
+        /*[Fact]
         public void Test1()
         {
             
         }
+        */
 
 
         [Fact]
@@ -128,6 +129,27 @@ namespace OurTests
             int result = table.ColumnIndexByName("NamePrueba1");
 
             Assert.Equal(0, result); 
+
+            int result2 = table.ColumnIndexByName("Num");
+
+            Assert.Equal(1, result2);
+
+            int result3 = table.ColumnIndexByName("Patata");
+
+            Assert.Equal(-1, result3);
+
+            List<ColumnDefinition> col2 = new List<ColumnDefinition>();
+
+            Table table2 = new Table("nameprueba2", col2);
+
+            int result4 = table2.ColumnIndexByName("Prueba");
+
+            Assert.Equal(-1, result4);
+
+            int result5 = table.ColumnIndexByName(null);
+
+            Assert.Equal(-1, result5);
+
         }
         
         [Fact]
@@ -195,7 +217,7 @@ namespace OurTests
             Assert.Same(rowPrueba, table.GetRow(0));
         } 
         [Fact]
-        public void TestDeleteIth()
+        public void TestDeleteCondition()
         {
              List<ColumnDefinition> columns = new List<ColumnDefinition>();
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
@@ -217,9 +239,9 @@ namespace OurTests
             Assert.Equal(1, tabla.NumRows());
         }
         [Fact]
-        public void TestSelect()
+        public void TestDeleteByIth()
         {
-            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+             List<ColumnDefinition> columns = new List<ColumnDefinition>();
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "salary"));
@@ -331,5 +353,27 @@ namespace OurTests
             Assert.Equal("Vitoria", result.GetRow(1).Values[0]);
             Assert.Equal("Kevin", result.GetRow(1).Values[1]);
         }
-}
+        [Fact]
+        public void TestDeleteConditionDouble()
+        {
+             List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Double, "salary"));
+            Table tabla = new Table("People", columns);
+
+            tabla.Insert(new List<string> { "Ainhoa", "23", "2000.2" });
+            tabla.Insert(new List<string> { "Igor", "26", "5200.32" });
+            tabla.Insert(new List<string> { "Kevin", "22", "1900.46" });
+            tabla.Insert(new List<string> { "Oier", "28", "2200.89" });
+
+            tabla.DeleteWhere(new Condition("salary", "=", "5200.32"));
+
+            Assert.Equal(3, tabla.NumRows());
+
+            tabla.DeleteWhere(new Condition("salary", ">", "2000.9"));
+
+            Assert.Equal(2, tabla.NumRows());
+        }
+    }
 }

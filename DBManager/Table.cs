@@ -74,7 +74,7 @@ namespace DbManager
         public int ColumnIndexByName(string columnName)
         {
             //TODO DEADLINE 1.A: Return the zero-based index of the column named columnName
-            for(int i = 0; 1 < ColumnDefinitions.Count; i++)
+            for(int i = 0; i < ColumnDefinitions.Count; i++)
             {
                if(ColumnDefinitions[i].Name == columnName)
                 {
@@ -134,7 +134,7 @@ namespace DbManager
         public void DeleteIthRow(int row)
         {
             //TODO DEADLINE 1.A: Delete the i-th row. If there is no i-th row, do nothing
-            if(row>=0 || row< Rows.Count)
+            if(row>=0 && row< Rows.Count)
             {
               Rows.RemoveAt(row);  
             }
@@ -163,9 +163,10 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Delete all rows where the condition is true. Check RowIndicesWhereConditionIsTrue()
             List<int> toRemove = RowIndicesWhereConditionIsTrue(condition);
-            for(int i =0; i< toRemove.Count; i++)
+
+            for (int i = toRemove.Count - 1; i >= 0; i--)
             {
-                DeleteIthRow(i);
+                DeleteIthRow(toRemove[i]);
             }
         }
 

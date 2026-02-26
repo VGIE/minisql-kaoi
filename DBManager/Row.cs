@@ -18,6 +18,10 @@ namespace DbManager
             //TODO DEADLINE 1.A: Initialize member variables
             this.Values = values;
             this.ColumnDefinitions = columnDefinitions;
+            while (Values.Count < ColumnDefinitions.Count)
+            {
+                Values.Add(null);
+            }
             
         }
 
@@ -40,7 +44,10 @@ namespace DbManager
             {
                 if(ColumnDefinitions[i].Name == columnName)
                 {
-                   return Values[i];
+                    if (i < Values.Count)
+                    {
+                        return Values[i];
+                    }
                 }
                 //resultado = Values.Contains(columnName).ToString();
             }

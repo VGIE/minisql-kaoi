@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,21 +27,33 @@ namespace DbManager
         public Database(string adminUsername, string adminPassword)
         {
             //DEADLINE 1.B: Initalize the member variables
+           m_username = adminUsername;
 
         }
 
         public bool AddTable(Table table)
         {
             //DEADLINE 1.B: Add a new table to the database
+            if(table == null)
+                return false;
 
-            return false;
-
+            Tables.Add(table);
+            
+            return true;
+            
         }
 
         public Table TableByName(string tableName)
         {
             //DEADLINE 1.B: Find and return the table with the given name
-
+            
+            foreach(Table table in Tables)
+            {
+                if(table.Name == tableName)
+                {
+                    return table;
+                }
+            }
             return null;
 
         }
@@ -51,17 +64,63 @@ namespace DbManager
             //return false and set LastErrorMessage with the appropriate error (Check Constants.cs)
             //Do the same if no column is provided
             //If everything goes ok, set LastErrorMessage with the appropriate success message (Check Constants.cs)
+            bool found = false ;
+            int i = 0;
 
-            return false;
-
+            if(String.IsNullOrEmpty(tableName))
+            {
+              LastErrorMessage = Constants.TableAlreadyExistsError;  
+              return false;
+            }
+            else if (ColumnDefinition.Count == 0 || ColumnDefinition == null)
+            {
+                LastErrorMessage = Constants.TableAlreadyExistsError; 
+                return false; 
+            }
+            while (i< Tables.Count && !found)
+            {
+               if(Tables[i].Name == tableName)
+                {
+                    found = true;
+                }
+                i++;
+            }
+          
+            
+            if (!found)
+            {
+                Table nTable = new Table(tableName, ColumnDefinition);
+                Tables.Add(nTable);
+                LastErrorMessage = Constants. CreateTableSuccess; 
+                return true;
+            }
+            else
+            {
+                LastErrorMessage = Constants.TableAlreadyExistsError;
+                return false;
+            }
+            
         }
 
         public bool DropTable(string tableName)
         {
             //DEADLINE 1.B: Delete the table with the given name. If the table doesn't exist, return false and set LastErrorMessage
             //If everything goes ok, return true and set LastErrorMessage with the appropriate success message (Check Constants.cs)
-
-            return false;
+            Table table = null;
+            for (int i = 0; i < Tables.Count; i++)
+            {
+                if (Tables[i].Name == tableName)
+                {
+                    table = Tables[i]; break;
+                }
+            }
+            if (table == null)
+            {
+                return false;
+            }
+            Tables.Remove(table);
+            LastErrorMessage = Constants.DropTableSuccess;
+            return true;
         }
 
         public bool Insert(string tableName, List<string> values)
@@ -119,8 +178,34 @@ namespace DbManager
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
 
-            return false;
+            Table table = TableByName(tableName);
+            
+            if(table == null)
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return false;
+            }
+            
+            int col = table.ColumnIndexByName(columnCondition.ColumnName);
 
+            if(col == -1)
+            {
+                LastErrorMessage = Constants.ColumnDoesNotExistError;
+                return false;
+            }
+
+            for(int i = table.NumRows() - 1; i >= 0; i--)
+            {
+                Row row = table.GetRow(i);
+
+                if(row.IsTrue(columnCondition))
+                {
+                    table.DeleteIthRow(i);
+                }
+            }
+            LastErrorMessage = Constants.DeleteSuccess;
+            return true;
+            
         }
 
         public bool Update(string tableName, List<SetValue> columnNames, Condition columnCondition)
@@ -142,7 +227,18 @@ namespace DbManager
             //DEADLINE 1.C: Save this database to disk with the given name
             //If everything goes ok, return true, false otherwise.
             //DEADLINE 5: Save the SecurityManager so that it can be loaded with the database in Load()
-
+            
+            try
+            {
+                if(!Directory.Exists(databaseName))
+                {
+                    Directory.CreateDirectory(databaseName);
+                }
+            }
+            catch
+            {
+                
+            }
             return false;
 
         }
