@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DbManager
 {
@@ -165,16 +166,35 @@ namespace DbManager
             
             try
             {
-                if(!Directory.Exists(databaseName))
+                string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+                Directory.CreateDirectory(path);
+
+                foreach(Table table in Tables)
                 {
-                    Directory.CreateDirectory(databaseName);
+                    string tablePath = Path.Combine(path, table.Name + ".txt");
+
+                    using(StreamWriter wr = new StreamWriter(tablePath))
+                    {
+                        for(int i = 0; i < table.NumColumns(); i++)
+                        {
+                            wr.WriteLine(table.GetColumn(i).AsText());
+                        }
+                        wr.WriteLine("-----------");
+
+                        for(int i = 0; i < table.NumRows(); i++)
+                        {
+                            wr.WriteLine(table.GetRow(i).AsText());
+                        }
+                    }
                 }
+
+                return true;
             }
-            catch
+            catch(Exception ex)
             {
-                
+                LastErrorMessage = Constants.Error + ex.Message;
+                return false;
             }
-            return false;
             
         }
 
