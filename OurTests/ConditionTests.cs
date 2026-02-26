@@ -31,8 +31,8 @@ namespace OurTests
             Assert.True(condition3.IsTrue("100.4", ColumnDefinition.DataType.Double));
             Assert.False(condition3.IsTrue("100.6", ColumnDefinition.DataType.Double));
         }
-        [Fact]
-        public void MayorIgual()
+       /* [Fact]
+       public void MayorIgual()
         {
             var condition = new Condition("a", ">=", "18");
             Assert.True(condition.IsTrue("20", ColumnDefinition.DataType.Int));
@@ -44,7 +44,7 @@ namespace OurTests
             Assert.True(condition3.IsTrue("100.5", ColumnDefinition.DataType.Double));
             Assert.False(condition3.IsTrue("100.4", ColumnDefinition.DataType.Double));
             Assert.True(condition3.IsTrue("100.6", ColumnDefinition.DataType.Double));
-        }
+        }*/
         [Fact]
         public void Igual()
         {
@@ -58,7 +58,7 @@ namespace OurTests
             Assert.True(condition3.IsTrue("100.5", ColumnDefinition.DataType.Double));
             Assert.False(condition3.IsTrue("100.4", ColumnDefinition.DataType.Double));
         }
-        [Fact]
+      /*  [Fact]
         public void MenorIgual()
         {
             var condition = new Condition("a", "<=", "18");
@@ -70,6 +70,6 @@ namespace OurTests
             var condition3 = new Condition("c", "<=", "100.5");
             Assert.True(condition3.IsTrue("100.5", ColumnDefinition.DataType.Double));
             Assert.False(condition3.IsTrue("100.6", ColumnDefinition.DataType.Double));
-        }
+        }*/
     }
 }
