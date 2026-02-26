@@ -174,6 +174,8 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
+            if (columnNames == null || columnNames.Count == 0)
+                return null;
             Table result = new Table("Result", new List<ColumnDefinition>());
             List<int> columnIndices = new List<int>();
 
