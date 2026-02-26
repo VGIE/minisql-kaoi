@@ -40,7 +40,7 @@ namespace DbManager
         public string GetValue(string columnName)
         {
             //TODO DEADLINE 1.A: Given a column name, return the value in that column
-            for(int i = 0; i <= ColumnDefinitions.Count; i++)
+            for(int i = 0; i <ColumnDefinitions.Count; i++)
             {
                 if(ColumnDefinitions[i].Name == columnName)
                 {
