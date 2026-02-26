@@ -70,11 +70,13 @@ namespace OurTests
             Row testRow = Test1();
             Assert.True(testRow.IsTrue(new Condition("Name", "=", "Borja")));
             Assert.False(testRow.IsTrue(new Condition("Name", "=", "Alex")));
+
             Assert.True(testRow.IsTrue(new Condition("Name", "<", "Carlos")));
             Assert.False(testRow.IsTrue(new Condition("Name", "<", "Alex")));
             Assert.True(testRow.IsTrue(new Condition("Name", ">", "Alex")));
             Assert.False(testRow.IsTrue(new Condition("Name", ">", "Carlos")));
 
+           
             Assert.True(testRow.IsTrue(new Condition("Age", ">", "10")));
             Assert.False(testRow.IsTrue(new Condition("Age", ">", "30")));
             Assert.True(testRow.IsTrue(new Condition("Age", "<", "30")));

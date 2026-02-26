@@ -31,7 +31,7 @@ namespace DbManager
             //Convert first the strings to the appropriate type and then compare (depending on the operator of the condition)
             if (type == ColumnDefinition.DataType.String)
             {
-                int comparison = string.Compare(value, this.LiteralValue, StringComparison.Ordinal);
+                int comparison = value.CompareTo(this.LiteralValue);
                 switch (this.Operator)
                 {
                     case "=":
@@ -40,10 +40,6 @@ namespace DbManager
                         return comparison < 0;
                     case ">":
                         return comparison > 0;
-                    case "<=":
-                        return comparison <= 0;
-                    case ">=":
-                        return comparison >= 0;
                     default:
                         return false;
                 }
@@ -60,10 +56,6 @@ namespace DbManager
                         return valueInt < literalValueInt;
                     case ">":
                         return valueInt > literalValueInt;
-                    case "<=":
-                        return valueInt <= literalValueInt;
-                    case ">=":
-                        return valueInt >= literalValueInt;
                     default:
                         return false;
                 }
@@ -80,10 +72,6 @@ namespace DbManager
                         return valueDouble < literalValueDouble;
                     case ">":
                         return valueDouble > literalValueDouble;
-                    case "<=":
-                        return valueDouble <= literalValueDouble;
-                    case ">=":
-                        return valueDouble >= literalValueDouble;
                     default:
                         return false;
                 }
