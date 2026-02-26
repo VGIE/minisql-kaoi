@@ -48,10 +48,6 @@ namespace DbManager
                     {
                         return Values[i];
                     }
-                    else
-                    {
-                        return null;
-                    }
                 }
                 //resultado = Values.Contains(columnName).ToString();
             }
