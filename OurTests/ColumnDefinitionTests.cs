@@ -32,5 +32,26 @@ namespace OurTests
             Assert.Equal(expct2,result2);
             Assert.Equal(expct3,result3);
         }
+         [Fact]
+         public void testParse()
+        {
+            ColumnDefinition exp = new ColumnDefinition(ColumnDefinition.DataType.String, "Name");
+            ColumnDefinition result = ColumnDefinition.Parse(c1.AsText());
+
+            ColumnDefinition exp2 = new ColumnDefinition(ColumnDefinition.DataType.Int, "Salary");
+            ColumnDefinition result2 = ColumnDefinition.Parse(c2.AsText());
+
+            ColumnDefinition exp3 = new ColumnDefinition(ColumnDefinition.DataType.Double, "Weight");
+            ColumnDefinition result3 = ColumnDefinition.Parse(c3.AsText());
+
+            Assert.Equal(exp.Type, result.Type);
+            Assert.Equal(exp.Name,result.Name);
+
+            Assert.Equal(exp2.Type, result2.Type);
+            Assert.Equal(exp2.Name,result2.Name);
+
+            Assert.Equal(exp3.Type, result3.Type);
+            Assert.Equal(exp3.Name,result3.Name);
+        }
     }
 }
