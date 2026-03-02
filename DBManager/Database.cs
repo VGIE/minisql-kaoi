@@ -256,7 +256,7 @@ namespace DbManager
 
                         for(int i = 0; i < table.NumRows(); i++)
                         {
-                            wr.WriteLine(table.GetColumn(i).AsText());
+                            wr.WriteLine(table.GetRow(i).AsText());
                         }
                     }
                 }
