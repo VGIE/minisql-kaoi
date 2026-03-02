@@ -86,5 +86,18 @@ namespace OurTests
             Assert.False(b.CreateTable("n3",l3));
 
         }
+
+        [Fact]
+        public void TestSaveAndLoad()
+        {
+            Database database = Database.CreateTestDatabase();
+            string databaseName = "test1";
+
+            database.Save(databaseName);
+
+            Database loadData =  Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
+            
+            Assert.NotNull(loadData);
+        }
     }
 }
