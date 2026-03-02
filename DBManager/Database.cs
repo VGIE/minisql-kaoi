@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
@@ -205,7 +206,67 @@ namespace DbManager
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
             
-            return null;
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+
+                if(!Directory.Exists(path))
+                {
+                    return null;
+                }
+
+                Database database = new Database();
+                database.m_username = username;
+
+                string[] tableFile = Directory.GetFiles(path, "*.txt");
+
+                foreach(string t in tableFile)
+                {
+                    using(TextReader tr = File.OpenText(t))
+                    {
+                        List<ColumnDefinition> columnDefinitions = new List<ColumnDefinition>();
+                        string line;
+                        while((line = tr.ReadLine()) != "-----------")
+                        {
+                            ColumnDefinition col = ColumnDefinition.Parse(line);
+
+                            if(col != null)
+                            {
+                                columnDefinitions.Add(col);
+                            }
+                            else
+                            {
+                                database.LastErrorMessage = Constants.SyntaxError;
+                                return null;
+                            }
+                        }
+
+                        string tableName = Path.GetFileNameWithoutExtension(t);
+                        database.CreateTable(tableName, columnDefinitions);
+
+                        Table table = database.TableByName(tableName);
+                        
+                        if(table == null)
+                        {
+                            database.LastErrorMessage = Constants.TableDoesNotExistError;
+                            return null;
+                        }
+                        
+                        while((line = tr.ReadLine()) != null)
+                        {
+                            Row row = Row.Parse(columnDefinitions, line);
+                            database.TableByName(tableName).Insert(row.Values);
+                        }
+                    }
+                }
+                return database;
+            }
+            catch(Exception ex)
+            {
+                Database database = new Database();
+                database.LastErrorMessage = ex.Message;
+                return null;
+            }
         }
 
         public string ExecuteMiniSQLQuery(string query)
