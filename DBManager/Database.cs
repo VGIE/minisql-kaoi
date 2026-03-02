@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DbManager
 {
@@ -244,17 +246,42 @@ namespace DbManager
             
             try
             {
-                if(!Directory.Exists(databaseName))
-                {
-                    Directory.CreateDirectory(databaseName);
-                }
-            }
-            catch
-            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
                 
-            }
-            return false;
+                if(Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
 
+                Directory.CreateDirectory(path);
+
+                foreach(Table table in Tables)
+                {
+                    string tablePath = Path.Combine(path, table.Name + ".txt");
+
+                    using(StreamWriter wr = new StreamWriter(tablePath))
+                    {
+                        for(int i = 0; i < table.NumColumns(); i++)
+                        {
+                            wr.WriteLine(table.GetColumn(i).AsText());
+                        }
+
+                        wr.WriteLine();
+
+                        for(int i = 0; i < table.NumRows(); i++)
+                        {
+                            wr.WriteLine(table.GetRow(i).AsText());
+                        }
+                    }
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                LastErrorMessage = Constants.Error + ex.Message;
+                return false;
+            }
+            
         }
 
         public static Database Load(string databaseName, string username, string password)
@@ -263,8 +290,69 @@ namespace DbManager
             //If everything goes ok, return the loaded database (a new instance), null otherwise.
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
+            
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
 
-            return null;
+                if(!Directory.Exists(path))
+                {
+                    return null;
+                }
+
+                Database database = new Database();
+                database.m_username = username;
+
+                string[] tableFile = Directory.GetFiles(path, "*.txt");
+
+                foreach(string file in tableFile)
+                {
+                    using(TextReader tr = File.OpenText(file))
+                    {
+                        List<ColumnDefinition> columnDefinitions = new List<ColumnDefinition>();
+                        string line;
+
+                        while((line = tr.ReadLine()) != null && !string.IsNullOrWhiteSpace(line))
+                        {
+                            ColumnDefinition col = ColumnDefinition.Parse(line);
+                            if(col == null)
+                            {
+                                database.LastErrorMessage = Constants.SyntaxError;
+                                return null;
+                            }
+                            
+                            columnDefinitions.Add(col);
+                        }
+                        
+                        string tableName = Path.GetFileNameWithoutExtension(file);
+                        database.CreateTable(tableName, columnDefinitions);
+                        Table table = database.TableByName(tableName);
+                        
+                        while((line = tr.ReadLine()) != null)
+                        {
+                            if (string.IsNullOrWhiteSpace(line))
+                            {
+                                continue;
+                            } 
+
+                            Row row = Row.Parse(columnDefinitions, line);
+
+                            if(row == null)
+                            {
+                                database.LastErrorMessage = Constants.Error;
+                                return null;
+                            }
+
+                            table.Insert(row.Values);
+                        }
+                    }
+                }
+                return database;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public string ExecuteMiniSQLQuery(string query)

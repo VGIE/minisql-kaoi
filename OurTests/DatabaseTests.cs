@@ -124,5 +124,18 @@ namespace OurTests
             bool result = b.Update(table.Name, set, condi);
             Assert.False(result);
         }
+
+        [Fact]
+        public void TestSaveAndLoad()
+        {
+            Database database = Database.CreateTestDatabase();
+            string databaseName = "test1";
+
+            database.Save(databaseName);
+
+            Database loadData =  Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
+            
+            Assert.NotNull(loadData);
+        }
     }
 }

@@ -176,29 +176,31 @@ namespace DbManager
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
             if (columnNames == null || columnNames.Count == 0)
                 return null;
-            Table result = new Table("Result", new List<ColumnDefinition>());
+
+            List<ColumnDefinition> resultCols = new List<ColumnDefinition>();
             List<int> columnIndices = new List<int>();
 
             foreach (string columnName in columnNames)
             {
                 ColumnDefinition column = ColumnByName(columnName);
                 if (column == null)
-                    throw new Exception("La columna " + columnName + " no existe");
-                result.ColumnDefinitions.Add(column);
+                    return null;
                 columnIndices.Add(ColumnIndexByName(columnName));
+                resultCols.Add(column);
             }
 
-            List<int> rowIndices = RowIndicesWhereConditionIsTrue(condition);           
+            Table result = new Table("Result", resultCols);
+
+            List<int> rowIndices = RowIndicesWhereConditionIsTrue(condition);
             foreach (int rowIndex in rowIndices)
             {
                 List<string> newRowValues = new List<string>();
-                foreach(int colIndex in columnIndices)
-                {
+                foreach (int colIndex in columnIndices)
                     newRowValues.Add(Rows[rowIndex].Values[colIndex]);
-                }
-                result.Rows.Add(new Row(result.ColumnDefinitions, newRowValues));
+
+                result.AddRow(new Row(resultCols, newRowValues));
             }
-            return result;       
+            return result;
         }
 
         public bool Insert(List<string> values)

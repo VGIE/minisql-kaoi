@@ -281,19 +281,30 @@ namespace OurTests
             List<ColumnDefinition> columns = new List<ColumnDefinition>();
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "Name"));
             columns.Add(new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"));
+            columns.Add(new ColumnDefinition(ColumnDefinition.DataType.String, "City"));
             Table tabla = new Table("People", columns);
 
-            tabla.Insert(new List<string> { "Igor", "30" });
-            tabla.Insert(new List<string> { "Kevin", "25" });
+            tabla.Insert(new List<string> { "Igor", "30", "Bilbao" });
+            tabla.Insert(new List<string> { "Kevin", "25", "Vitoria" });
 
-            Table resultado = tabla.Select(new List<string> { "Name", "Age" }, null);
-
+            Table resultado = tabla.Select(new List<string> { "Name", "Age", "City" }, null);
             Assert.Equal(2, resultado.NumRows());
-            Assert.Equal(2, resultado.NumColumns());
+            Assert.Equal(3, resultado.NumColumns());
             Assert.Equal("Igor", resultado.GetRow(0).Values[0]);
             Assert.Equal("30", resultado.GetRow(0).Values[1]);
+            Assert.Equal("Bilbao", resultado.GetRow(0).Values[2]);
             Assert.Equal("Kevin", resultado.GetRow(1).Values[0]);
             Assert.Equal("25", resultado.GetRow(1).Values[1]);
+            Assert.Equal("Vitoria", resultado.GetRow(1).Values[2]);
+
+            Table subResult = tabla.Select(new List<string> { "Name" }, null);
+            Assert.Equal(2, subResult.NumRows());
+            Assert.Equal(1, subResult.NumColumns());
+            Assert.Equal("Igor", subResult.GetRow(0).Values[0]);
+            Assert.Equal("Kevin", subResult.GetRow(1).Values[0]);
+
+            Table nullResult = tabla.Select(new List<string> { "NoExiste" }, null);
+            Assert.Null(nullResult);
         }
 
         [Fact]
