@@ -168,6 +168,12 @@ namespace DbManager
             try
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+                
+                if(Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+
                 Directory.CreateDirectory(path);
 
                 foreach(Table table in Tables)
@@ -180,15 +186,15 @@ namespace DbManager
                         {
                             wr.WriteLine(table.GetColumn(i).AsText());
                         }
-                        wr.WriteLine("-----------");
+
+                        wr.WriteLine();
 
                         for(int i = 0; i < table.NumRows(); i++)
                         {
-                            wr.WriteLine(table.GetRow(i).AsText());
+                            wr.WriteLine(table.GetColumn(i).AsText());
                         }
                     }
                 }
-
                 return true;
             }
             catch(Exception ex)
@@ -220,51 +226,52 @@ namespace DbManager
 
                 string[] tableFile = Directory.GetFiles(path, "*.txt");
 
-                foreach(string t in tableFile)
+                foreach(string file in tableFile)
                 {
-                    using(TextReader tr = File.OpenText(t))
+                    using(TextReader tr = File.OpenText(file))
                     {
                         List<ColumnDefinition> columnDefinitions = new List<ColumnDefinition>();
                         string line;
-                        while((line = tr.ReadLine()) != "-----------")
+
+                        while((line = tr.ReadLine()) != null && !string.IsNullOrWhiteSpace(line))
                         {
                             ColumnDefinition col = ColumnDefinition.Parse(line);
-
-                            if(col != null)
-                            {
-                                columnDefinitions.Add(col);
-                            }
-                            else
+                            if(col == null)
                             {
                                 database.LastErrorMessage = Constants.SyntaxError;
                                 return null;
                             }
+                            
+                            columnDefinitions.Add(col);
                         }
-
-                        string tableName = Path.GetFileNameWithoutExtension(t);
-                        database.CreateTable(tableName, columnDefinitions);
-
-                        Table table = database.TableByName(tableName);
                         
-                        if(table == null)
-                        {
-                            database.LastErrorMessage = Constants.TableDoesNotExistError;
-                            return null;
-                        }
+                        string tableName = Path.GetFileNameWithoutExtension(file);
+                        database.CreateTable(tableName, columnDefinitions);
+                        Table table = database.TableByName(tableName);
                         
                         while((line = tr.ReadLine()) != null)
                         {
+                            if (string.IsNullOrWhiteSpace(line))
+                            {
+                                continue;
+                            } 
+
                             Row row = Row.Parse(columnDefinitions, line);
-                            database.TableByName(tableName).Insert(row.Values);
+
+                            if(row == null)
+                            {
+                                database.LastErrorMessage = Constants.Error;
+                                return null;
+                            }
+
+                            table.Insert(row.Values);
                         }
                     }
                 }
                 return database;
             }
-            catch(Exception ex)
+            catch
             {
-                Database database = new Database();
-                database.LastErrorMessage = ex.Message;
                 return null;
             }
         }

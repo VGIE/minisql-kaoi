@@ -64,5 +64,18 @@ namespace OurTests
 
             Assert.Equal(3, table.NumRows());
         }
+
+        [Fact]
+        public void TestSaveAndLoad()
+        {
+            Database database = Database.CreateTestDatabase();
+            string databaseName = "test1";
+
+            database.Save(databaseName);
+
+            Database loadData =  Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
+            
+            Assert.NotNull(loadData);
+        }
     }
 }
