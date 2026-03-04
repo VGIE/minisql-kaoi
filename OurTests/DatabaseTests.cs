@@ -137,5 +137,60 @@ namespace OurTests
             
             Assert.NotNull(loadData);
         }
+        [Fact]
+        public void TestSelect()
+        {
+            Database database = Database.CreateTestDatabase();
+
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            };
+
+            Table table = new Table("Test", col);
+            database.AddTable(table);
+
+            table.Insert(new List<string> { "Pepe", "69" });
+            table.Insert(new List<string> { "Igor", "20" });
+            table.Insert(new List<string> { "Kevin", "20" });
+            table.Insert(new List<string> { "Oier", "50" });
+            table.Insert(new List<string> { "Ainhoa", "5" });
+
+            List<string> columns = new List<string> { "Nombre", "Num" };
+            Condition condition = new Condition("Num", "=", "20");
+            Table result = database.Select("Test", columns, condition);
+
+            Assert.Equal(2, result.NumRows());
+            Assert.Equal(2, result.NumColumns());
+            Assert.Equal("Igor", result.GetRow(0).Values[0]);
+            Assert.Equal("20", result.GetRow(0).Values[1]);
+            Assert.Equal("Kevin", result.GetRow(1).Values[0]);
+            Assert.Equal("20", result.GetRow(1).Values[1]);
+
+            Table nullResult = database.Select("NoExiste", columns, condition);
+            Assert.Null(nullResult);
+        }
+
+        [Fact]
+        public void TestInsert()
+        {
+            Database database = Database.CreateTestDatabase();
+
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            };
+
+            Table table = new Table("Test", col);
+            database.AddTable(table);
+
+            database.Insert("Test", new List<string> { "Igor", "20" });
+
+            Assert.Equal(1, table.NumRows());
+            Assert.Equal("Igor", table.GetRow(0).Values[0]);
+            Assert.Equal("20", table.GetRow(0).Values[1]);
+        }
     }
 }

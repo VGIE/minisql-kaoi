@@ -177,30 +177,42 @@ namespace DbManager
             if (columnNames == null || columnNames.Count == 0)
                 return null;
 
-            List<ColumnDefinition> resultCols = new List<ColumnDefinition>();
-            List<int> columnIndices = new List<int>();
-
-            foreach (string columnName in columnNames)
+            List<int> filas = new List<int>();
+            if (condition != null)
             {
-                ColumnDefinition column = ColumnByName(columnName);
-                if (column == null)
+                filas = RowIndicesWhereConditionIsTrue(condition);
+            }
+            else
+            {
+                for (int i = 0; i < Rows.Count; i++)
+                {
+                    filas.Add(i);
+                }
+            }
+
+            List<ColumnDefinition> tablaCols = new List<ColumnDefinition>();
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                ColumnDefinition def = ColumnByName(columnNames[i]);
+                if (def == null)
                     return null;
-                columnIndices.Add(ColumnIndexByName(columnName));
-                resultCols.Add(column);
+                tablaCols.Add(new ColumnDefinition(def.Type, def.Name));
             }
 
-            Table result = new Table("Result", resultCols);
+            Table tablaResultado = new Table("Result", tablaCols);
 
-            List<int> rowIndices = RowIndicesWhereConditionIsTrue(condition);
-            foreach (int rowIndex in rowIndices)
+            for (int i = 0; i < filas.Count; i++)
             {
-                List<string> newRowValues = new List<string>();
-                foreach (int colIndex in columnIndices)
-                    newRowValues.Add(Rows[rowIndex].Values[colIndex]);
-
-                result.AddRow(new Row(resultCols, newRowValues));
+                Row filaActual = GetRow(filas[i]);
+                List<string> vals = new List<string>();
+                for (int j = 0; j < columnNames.Count; j++)
+                {
+                    vals.Add(filaActual.GetValue(columnNames[j]));
+                }
+                tablaResultado.Insert(vals);
             }
-            return result;
+
+            return tablaResultado;
         }
 
         public bool Insert(List<string> values)
