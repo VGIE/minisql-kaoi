@@ -194,6 +194,8 @@ namespace DbManager
             for (int i = 0; i < columnNames.Count; i++)
             {
                 ColumnDefinition def = ColumnByName(columnNames[i]);
+                if (def == null)
+                    return null;
                 tablaCols.Add(new ColumnDefinition(def.Type, def.Name));
             }
 
