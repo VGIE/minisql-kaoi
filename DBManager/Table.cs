@@ -174,45 +174,31 @@ namespace DbManager
         {
             //TODO DEADLINE 1.A: Return a new table (with name 'Result') that contains the result of the select. The condition
             //may be null (if no condition, all rows should be returned). This is the most difficult method in this class
-            if (columnNames == null || columnNames.Count == 0)
+            if (columnNames == null)
                 return null;
 
-            List<int> filas = new List<int>();
-            if (condition != null)
-            {
-                filas = RowIndicesWhereConditionIsTrue(condition);
-            }
-            else
-            {
-                for (int i = 0; i < Rows.Count; i++)
-                {
-                    filas.Add(i);
-                }
-            }
-
-            List<ColumnDefinition> tablaCols = new List<ColumnDefinition>();
+            List<ColumnDefinition> colResultado = new List<ColumnDefinition>();
             for (int i = 0; i < columnNames.Count; i++)
             {
-                ColumnDefinition def = ColumnByName(columnNames[i]);
-                if (def == null)
-                    return null;
-                tablaCols.Add(new ColumnDefinition(def.Type, def.Name));
+                ColumnDefinition encontrada = ColumnByName(columnNames[i]);
+                if (encontrada != null)
+                    colResultado.Add(new ColumnDefinition(encontrada.Type, encontrada.Name));
             }
-
-            Table tablaResultado = new Table("Result", tablaCols);
-
-            for (int i = 0; i < filas.Count; i++)
+            Table tablaFinal = new Table("Result", colResultado);
+            
+            foreach (Row fila in Rows)
             {
-                Row filaActual = GetRow(filas[i]);
-                List<string> vals = new List<string>();
-                for (int j = 0; j < columnNames.Count; j++)
+                if (condition == null || fila.IsTrue(condition))
                 {
-                    vals.Add(filaActual.GetValue(columnNames[j]));
+                    List<string> nuevosValores = new List<string>();
+                    for (int j = 0; j < colResultado.Count; j++)
+                    {
+                        nuevosValores.Add(fila.GetValue(colResultado[j].Name));
+                    }
+                    tablaFinal.AddRow(new Row(colResultado, nuevosValores));
                 }
-                tablaResultado.Insert(vals);
             }
-
-            return tablaResultado;
+            return tablaFinal;
         }
 
         public bool Insert(List<string> values)
