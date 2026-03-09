@@ -215,8 +215,22 @@ namespace DbManager
             //DEADLINE 1.B: Update in the given table all the rows where the condition is true using the SetValues
             //If the table or the column in the condition don't exist, return null and set LastErrorMessage (Check Constants.cs)
             //If everything goes ok, return true
-
-            return false;
+            Table table = TableByName(tableName);
+            if(table==null)
+            {
+                LastErrorMessage = Constants.TableDoesNotExistError;
+                return false;
+            }
+            if (columnCondition != null)
+            {
+                if(table.ColumnIndexByName(columnCondition.ColumnName) == -1)
+                {
+                    LastErrorMessage = Constants.ColumnDoesNotExistError;
+                    return false;
+                }
+            }
+            table.Update(columnNames, columnCondition);
+            return true;
 
         }
 
@@ -245,18 +259,18 @@ namespace DbManager
                 {
                     string tablePath = Path.Combine(path, table.Name + ".txt");
 
-                    using(StreamWriter wr = new StreamWriter(tablePath))
+                    using(TextWriter tr = File.CreateText(tablePath))
                     {
                         for(int i = 0; i < table.NumColumns(); i++)
                         {
-                            wr.WriteLine(table.GetColumn(i).AsText());
+                            tr.WriteLine(table.GetColumn(i).AsText());
                         }
 
-                        wr.WriteLine();
+                        tr.WriteLine();
 
                         for(int i = 0; i < table.NumRows(); i++)
                         {
-                            wr.WriteLine(table.GetRow(i).AsText());
+                            tr.WriteLine(table.GetRow(i).AsText());
                         }
                     }
                 }

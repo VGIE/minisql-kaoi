@@ -77,14 +77,19 @@ namespace DbManager
         private const string Delimiter = ":";
         private const string DelimiterEncoded = "[SEPARATOR]";
 
-        private static string Encode(string value)
+        private static string Encode(string value) //ainho
         {
             //TODO DEADLINE 1.C: Encode the delimiter in value
             //si el nombre tiene espacio lo guardamos etc, codificamos con la inversa
             //con las llaves space o lo que hayhamos usado y lo que da (no entiendo)
-
-            
-            return null;
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            else
+            {
+                return value.Replace(Delimiter, DelimiterEncoded);
+            }
             
         }
 
@@ -92,24 +97,38 @@ namespace DbManager
         {
             //TODO DEADLINE 1.C: Decode the value doing the opposite of Encode()
             
-            return null;
+            return value.Replace(DelimiterEncoded, Delimiter);
             
         }
 
-        public string AsText()
+        public string AsText() //ainho
         {
             //TODO DEADLINE 1.C: Return the row as string with all values separated by the delimiter
-            
-            return null;
-            
+
+            String result = "";
+
+            for (int i = 0; i < Values.Count; i++)
+            {
+                if (i > 0)
+                {
+                    result += Delimiter; 
+                }
+                result += Encode(Values[i]);
+            }
+            return result;
+
         }
 
         public static Row Parse(List<ColumnDefinition> columns, string value)
         {
             //TODO DEADLINE 1.C: Parse a rowReturn the row as string with all values separated by the delimiter
-            
-            return null;
-            
+            List<string> values = new List<string>();
+
+            if (value.Count() != columns.Count)
+            {
+                throw new Exception("Invalid row format");
+            }
+            return new Row(columns, values);
         }
     }
 }
