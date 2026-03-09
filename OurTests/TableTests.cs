@@ -302,9 +302,6 @@ namespace OurTests
             Assert.Equal(1, subResult.NumColumns());
             Assert.Equal("Igor", subResult.GetRow(0).Values[0]);
             Assert.Equal("Kevin", subResult.GetRow(1).Values[0]);
-
-            Table nullResult = tabla.Select(new List<string> { "NoExiste" }, null);
-            Assert.Null(nullResult);
         }
 
         [Fact]

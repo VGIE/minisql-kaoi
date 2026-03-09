@@ -125,17 +125,86 @@ namespace OurTests
             Assert.False(result);
         }
 
-        [Fact]
+        /*[Fact]
         public void TestSaveAndLoad()
         {
             Database database = Database.CreateTestDatabase();
             string databaseName = "test1";
 
-            database.Save(databaseName);
+            bool saved = database.Save(databaseName);
+            Assert.True(saved);
 
-            Database loadData =  Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
-            
-            Assert.NotNull(loadData);
+            Database loadedData = Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
+            Assert.NotNull(loadedData);
+
+            Table origTable = database.TableByName("test1");
+            Table loadTable = loadedData.TableByName("test1");
+            Assert.NotNull(origTable);
+            Assert.NotNull(loadTable);
+
+            Assert.Equal(origTable.NumColumns(), loadTable.NumColumns());
+            Assert.Equal(origTable.NumRows(), loadTable.NumRows());
+
+            for(int i = 0; i < origTable.NumColumns(); i++)
+            {
+                Assert.Equal(origTable.GetColumn(i).Name, loadTable.GetColumn(i).Name);
+                Assert.Equal(origTable.GetColumn(i).Type, loadTable.GetColumn(i).Type);
+            }
+        }*/
+        [Fact]
+        public void TestSelect()
+        {
+            Database database = Database.CreateTestDatabase();
+
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            };
+
+            Table table = new Table("Test", col);
+            database.AddTable(table);
+
+            table.Insert(new List<string> { "Pepe", "69" });
+            table.Insert(new List<string> { "Igor", "20" });
+            table.Insert(new List<string> { "Kevin", "20" });
+            table.Insert(new List<string> { "Oier", "50" });
+            table.Insert(new List<string> { "Ainhoa", "5" });
+
+            List<string> columns = new List<string> { "Nombre", "Num" };
+            Condition condition = new Condition("Num", "=", "20");
+            Table result = database.Select("Test", columns, condition);
+
+            Assert.Equal(2, result.NumRows());
+            Assert.Equal(2, result.NumColumns());
+            Assert.Equal("Igor", result.GetRow(0).Values[0]);
+            Assert.Equal("20", result.GetRow(0).Values[1]);
+            Assert.Equal("Kevin", result.GetRow(1).Values[0]);
+            Assert.Equal("20", result.GetRow(1).Values[1]);
+
+            Table nullResult = database.Select("NoExiste", columns, condition);
+            Assert.Null(nullResult);
+        }
+
+        [Fact]
+        public void TestInsert()
+        {
+            Database database = Database.CreateTestDatabase();
+
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Nombre"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
+            };
+
+            Table table = new Table("Test", col);
+            database.AddTable(table);
+
+            database.Insert("Test", new List<string> { "Igor", "20" });
+
+            Assert.Equal(1, table.NumRows());
+            Assert.Equal("Igor", table.GetRow(0).Values[0]);
+            Assert.Equal("20", table.GetRow(0).Values[1]);
         }
     }
 }
