@@ -291,6 +291,7 @@ namespace DbManager
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
             
+            Database database = new Database();
             try
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
@@ -300,7 +301,7 @@ namespace DbManager
                     return null;
                 }
 
-                Database database = new Database();
+                
                 database.m_username = username;
 
                 string[] tableFile = Directory.GetFiles(path, "*.txt");
@@ -312,7 +313,7 @@ namespace DbManager
                         List<ColumnDefinition> columnDefinitions = new List<ColumnDefinition>();
                         string line;
 
-                        while((line = tr.ReadLine()) != null && !string.IsNullOrWhiteSpace(line))
+                        while((line = tr.ReadLine()) != "")
                         {
                             ColumnDefinition col = ColumnDefinition.Parse(line);
                             if(col == null)
@@ -328,7 +329,7 @@ namespace DbManager
                         database.CreateTable(tableName, columnDefinitions);
                         Table table = database.TableByName(tableName);
                         
-                        while((line = tr.ReadLine()) != null)
+                        while((line = tr.ReadLine()) != "")
                         {
                             if (string.IsNullOrWhiteSpace(line))
                             {
@@ -349,8 +350,9 @@ namespace DbManager
                 }
                 return database;
             }
-            catch
+            catch(Exception ex)
             {
+                database.LastErrorMessage = ex.Message;
                 return null;
             }
         }

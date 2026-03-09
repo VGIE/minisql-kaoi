@@ -125,7 +125,7 @@ namespace OurTests
             Assert.False(result);
         }
 
-        /*[Fact]
+        [Fact]
         public void TestSaveAndLoad()
         {
             Database database = Database.CreateTestDatabase();
@@ -150,7 +150,8 @@ namespace OurTests
                 Assert.Equal(origTable.GetColumn(i).Name, loadTable.GetColumn(i).Name);
                 Assert.Equal(origTable.GetColumn(i).Type, loadTable.GetColumn(i).Type);
             }
-        }*/
+        }
+        
         [Fact]
         public void TestSelect()
         {
