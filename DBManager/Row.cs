@@ -125,13 +125,19 @@ namespace DbManager
         public static Row Parse(List<ColumnDefinition> columns, string value)
         {
             //TODO DEADLINE 1.C: Parse a rowReturn the row as string with all values separated by the delimiter
-            string[] partes = value.Split(Delimiter);
-            List<string> valores = new List<string>();
-            for (int i = 0; i < partes.Length; i++)
+            string[] separate = value.Split(Delimiter);
+            
+            if(separate.Length != columns.Count)
             {
-                valores.Add(Decode(partes[i]));
+                return null;
             }
-            return new Row(columns, valores);
+
+            List<string> values = new List<string>();
+            foreach(string sep in separate)
+            {
+                values.Add(Decode(sep));
+            }
+            return new Row(columns, values);
         }
     }
 }

@@ -266,7 +266,7 @@ namespace DbManager
                             tr.WriteLine(table.GetColumn(i).AsText());
                         }
 
-                        tr.WriteLine();
+                        tr.WriteLine("");
 
                         for(int i = 0; i < table.NumRows(); i++)
                         {
@@ -291,6 +291,7 @@ namespace DbManager
             //DEADLINE 5: When the Database object is created, set the username (create a new method if you must)
             //After loading the database, load the SecurityManager and check the password is correct. If it's not, return null. If it is return the database
             
+            Database database = new Database();
             try
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
@@ -300,7 +301,6 @@ namespace DbManager
                     return null;
                 }
 
-                Database database = new Database();
                 database.m_username = username;
 
                 string[] tableFile = Directory.GetFiles(path, "*.txt");
@@ -312,7 +312,7 @@ namespace DbManager
                         List<ColumnDefinition> columnDefinitions = new List<ColumnDefinition>();
                         string line;
 
-                        while((line = tr.ReadLine()) != null && !string.IsNullOrWhiteSpace(line))
+                        while((line = tr.ReadLine()) != "")
                         {
                             ColumnDefinition col = ColumnDefinition.Parse(line);
                             if(col == null)
@@ -330,11 +330,6 @@ namespace DbManager
                         
                         while((line = tr.ReadLine()) != null)
                         {
-                            if (string.IsNullOrWhiteSpace(line))
-                            {
-                                continue;
-                            } 
-
                             Row row = Row.Parse(columnDefinitions, line);
 
                             if(row == null)
@@ -349,8 +344,9 @@ namespace DbManager
                 }
                 return database;
             }
-            catch
+            catch(Exception ex)
             {
+                database.LastErrorMessage = ex.Message;
                 return null;
             }
         }
