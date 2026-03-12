@@ -178,13 +178,14 @@ namespace DbManager
                 return null;
 
             List<ColumnDefinition> colResultado = new List<ColumnDefinition>();
+            Table tablaFinal = new Table("Result", colResultado);
             for (int i = 0; i < columnNames.Count; i++)
             {
                 ColumnDefinition encontrada = ColumnByName(columnNames[i]);
-                if (encontrada != null)
-                    colResultado.Add(new ColumnDefinition(encontrada.Type, encontrada.Name));
+                if (encontrada == null)
+                    return tablaFinal;
+                colResultado.Add(new ColumnDefinition(encontrada.Type, encontrada.Name));
             }
-            Table tablaFinal = new Table("Result", colResultado);
             
             foreach (Row fila in Rows)
             {

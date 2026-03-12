@@ -96,7 +96,10 @@ namespace DbManager
         private static string Decode(string value)
         {
             //TODO DEADLINE 1.C: Decode the value doing the opposite of Encode()
-            
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
             return value.Replace(DelimiterEncoded, Delimiter);
             
         }
@@ -122,13 +125,13 @@ namespace DbManager
         public static Row Parse(List<ColumnDefinition> columns, string value)
         {
             //TODO DEADLINE 1.C: Parse a rowReturn the row as string with all values separated by the delimiter
-            List<string> values = new List<string>();
-
-            if (value.Count() != columns.Count)
+            string[] partes = value.Split(Delimiter);
+            List<string> valores = new List<string>();
+            for (int i = 0; i < partes.Length; i++)
             {
-                throw new Exception("Invalid row format");
+                valores.Add(Decode(partes[i]));
             }
-            return new Row(columns, values);
+            return new Row(columns, valores);
         }
     }
 }
