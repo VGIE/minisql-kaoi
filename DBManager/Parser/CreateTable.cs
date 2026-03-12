@@ -21,10 +21,16 @@ namespace DbManager
         {
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //CreateTableSuccess or the last error in the database
-            
-            return null;
-            
+            Table tabla = database.TableByName(Table);
+            if (database==null)
+                return Constants.Error;
+            else if (tabla != null)
+                return Constants.TableAlreadyExistsError;
+            else if (ColumnsParameters == null || ColumnsParameters.Count == 0)
+                return Constants.DatabaseCreatedWithoutColumnsError;
+            else if(database.CreateTable(Table, ColumnsParameters))
+                return Constants.CreateTableSuccess;
+            return Constants.Error;
         }
-
     }
 }
