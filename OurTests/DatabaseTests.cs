@@ -139,7 +139,7 @@ namespace OurTests
             Assert.False(anw2);
             Assert.Null(b.TableByName(table.Name));
         }
-        /*[Fact]
+        [Fact]
         public void TestSaveAndLoad()
         {
             Database database = Database.CreateTestDatabase();
