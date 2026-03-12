@@ -135,5 +135,51 @@ namespace OurTests
             string anw= r.AsText();
             Assert.Equal("", anw);
         }
+        [Fact]
+        public void ParseTest()
+        {
+            List<ColumnDefinition> cols = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"),
+                new ColumnDefinition(ColumnDefinition.DataType.Double, "Grade")
+            };
+
+            Row r = Row.Parse(cols, "Kevin:21:7.9");
+            Assert.Equal("Kevin", r.Values[0]);
+            Assert.Equal("21", r.Values[1]);
+            Assert.Equal("7.9", r.Values[2]);
+        }
+
+        [Fact]
+        public void ParseTestDelimiterInValue()
+        {
+            List<ColumnDefinition> cols = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Desc")
+            };
+
+            Row original = new Row(cols, new List<string> { "Igor", "val:con:delimitador" });
+            string texto = original.AsText();
+            Row r = Row.Parse(cols, texto);
+            Assert.Equal("Igor", r.Values[0]);
+            Assert.Equal("val:con:delimitador", r.Values[1]);
+        }
+
+        [Fact]
+        public void ParseRoundTrip()
+        {
+            List<ColumnDefinition> cols = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Age")
+            };
+
+            Row original = new Row(cols, new List<string> { "Pepe", "30" });
+            Row parsed = Row.Parse(cols, original.AsText());
+            Assert.Equal(original.Values[0], parsed.Values[0]);
+            Assert.Equal(original.Values[1], parsed.Values[1]);
+        }
     }
 }
