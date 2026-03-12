@@ -14,7 +14,7 @@ namespace DbManager
 {
     public class Database
     {
-        private List<Table> Tables = new List<Table>();
+        public List<Table> Tables = new List<Table>();
         private string m_username;
 
         public string LastErrorMessage { get; private set; }
