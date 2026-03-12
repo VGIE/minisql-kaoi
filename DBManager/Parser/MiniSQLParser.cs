@@ -9,7 +9,7 @@ namespace DbManager
         public static MiniSqlQuery Parse(string miniSQLQuery)
         {
             //TODO DEADLINE 2
-            const string selectPattern = null;
+            const string selectPattern = @"/^SELECT\s+\w^\s+FROM\s+\w+\s+|SELECT\s+\w^\s+FROM\s+\w+\s+WHERE\s+\w+(<|=|>)\s+\w+""gm"; //no funciona
             
             const string insertPattern = null;
             
