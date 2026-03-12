@@ -130,10 +130,9 @@ namespace DbManager
             }
 
             List<string> values = new List<string>();
-
-            for(int i = 0; i < columns.Count; i++)
+            foreach(string sep in separate)
             {
-                values.Add(Decode(separate[i]));
+                values.Add(Decode(sep));
             }
             return new Row(columns, values);
         }

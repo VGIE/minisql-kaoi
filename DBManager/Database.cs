@@ -266,7 +266,7 @@ namespace DbManager
                             tr.WriteLine(table.GetColumn(i).AsText());
                         }
 
-                        tr.WriteLine();
+                        tr.WriteLine("");
 
                         for(int i = 0; i < table.NumRows(); i++)
                         {
@@ -301,7 +301,6 @@ namespace DbManager
                     return null;
                 }
 
-                
                 database.m_username = username;
 
                 string[] tableFile = Directory.GetFiles(path, "*.txt");
@@ -329,13 +328,8 @@ namespace DbManager
                         database.CreateTable(tableName, columnDefinitions);
                         Table table = database.TableByName(tableName);
                         
-                        while((line = tr.ReadLine()) != "")
+                        while((line = tr.ReadLine()) != null)
                         {
-                            if (string.IsNullOrWhiteSpace(line))
-                            {
-                                continue;
-                            } 
-
                             Row row = Row.Parse(columnDefinitions, line);
 
                             if(row == null)

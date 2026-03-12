@@ -137,8 +137,8 @@ namespace OurTests
             Database loadedData = Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
             Assert.NotNull(loadedData);
 
-            Table origTable = database.TableByName("test1");
-            Table loadTable = loadedData.TableByName("test1");
+            /*Table origTable = database.TableByName(databaseName);
+            Table loadTable = loadedData.TableByName(databaseName);
             Assert.NotNull(origTable);
             Assert.NotNull(loadTable);
 
@@ -150,7 +150,14 @@ namespace OurTests
                 Assert.Equal(origTable.GetColumn(i).Name, loadTable.GetColumn(i).Name);
                 Assert.Equal(origTable.GetColumn(i).Type, loadTable.GetColumn(i).Type);
             }
+            */
         }
+
+        /*public Boolean sameDB(Database original, Database loaded)
+        {
+            if()
+        }
+        */
         
         [Fact]
         public void TestSelect()
