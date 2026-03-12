@@ -124,7 +124,21 @@ namespace OurTests
             bool result = b.Update(table.Name, set, condi);
             Assert.False(result);
         }
-
+        [Fact]
+        public void DropTable()
+        {
+            Database b = Database.CreateTestDatabase();
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name")
+            };
+            Table table = Table.CreateTestTable();
+            bool anw = b.DropTable(table.Name);
+            Assert.True(anw);
+            bool anw2 = b.DropTable(table.Name);
+            Assert.False(anw2);
+            Assert.Null(b.TableByName(table.Name));
+        }
         /*[Fact]
         public void TestSaveAndLoad()
         {
