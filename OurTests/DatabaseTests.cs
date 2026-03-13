@@ -124,8 +124,22 @@ namespace OurTests
             bool result = b.Update(table.Name, set, condi);
             Assert.False(result);
         }
-
-        /*[Fact]
+        [Fact]
+        public void DropTable()
+        {
+            Database b = Database.CreateTestDatabase();
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name")
+            };
+            Table table = Table.CreateTestTable();
+            bool anw = b.DropTable(table.Name);
+            Assert.True(anw);
+            bool anw2 = b.DropTable(table.Name);
+            Assert.False(anw2);
+            Assert.Null(b.TableByName(table.Name));
+        }
+        [Fact]
         public void TestSaveAndLoad()
         {
             Database database = Database.CreateTestDatabase();
@@ -137,20 +151,37 @@ namespace OurTests
             Database loadedData = Database.Load(databaseName, Database.AdminUsername, Database.AdminPassword);
             Assert.NotNull(loadedData);
 
-            Table origTable = database.TableByName("test1");
-            Table loadTable = loadedData.TableByName("test1");
-            Assert.NotNull(origTable);
-            Assert.NotNull(loadTable);
+            bool result = sameDB(database, loadedData);
+            Assert.True(result);            
+        }
 
-            Assert.Equal(origTable.NumColumns(), loadTable.NumColumns());
-            Assert.Equal(origTable.NumRows(), loadTable.NumRows());
-
-            for(int i = 0; i < origTable.NumColumns(); i++)
+        public bool sameDB(Database original, Database loaded)
+        {
+            foreach(Table tableO in original.Tables)
             {
-                Assert.Equal(origTable.GetColumn(i).Name, loadTable.GetColumn(i).Name);
-                Assert.Equal(origTable.GetColumn(i).Type, loadTable.GetColumn(i).Type);
+                Table tableL = loaded.TableByName(tableO.Name);
+
+                if(tableL == null)
+                    return false;
+
+                if(tableO.Name != tableL.Name || tableO.NumColumns() != tableL.NumColumns() || tableO.NumRows() != tableL.NumRows())
+                    return false;
+
+                for(int i = 0; i < tableO.NumRows(); i++)
+                {
+                    Row rowO = tableO.GetRow(i);
+                    Row rowL = tableL.GetRow(i);
+
+                    for(int j = 0; j < tableO.NumColumns(); j++)
+                    {
+                        if(rowO.Values[j] != rowL.Values[j])
+                            return false;
+                    }
+                }
             }
-        }*/
+            return true;
+        }
+        
         [Fact]
         public void TestSelect()
         {

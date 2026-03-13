@@ -49,7 +49,7 @@ namespace OurTests
         }
         [Fact]
 
-        public void Test2()
+        public void SetGetTest()
         {
             Row testRow = Test1();
             Assert.Equal("Borja", testRow.GetValue("Name"));
@@ -65,7 +65,7 @@ namespace OurTests
             Assert.Null(testRow1.GetValue("Grade"));
         }
         [Fact]
-        public void Test3()
+        public void IsTrueTest()
         {
             Row testRow = Test1();
             Assert.True(testRow.IsTrue(new Condition("Name", "=", "Borja")));
@@ -90,10 +90,96 @@ namespace OurTests
             Assert.False(testRow.IsTrue(new Condition("Grade", ">", "10")));
             Assert.True(testRow.IsTrue(new Condition("Grade", "<", "8.5")));
             Assert.False(testRow.IsTrue(new Condition("Grade", "<", "7.5")));
+        }
+        [Fact]
+        public void asTextTest()
+        {
+            List<string> values = new List<string> { "Kevin", "7.9", "21" };
+            Row f = new Row(new List<ColumnDefinition>(), values);
+            string anw = "Kevin:7.9:21";
+            string  real= f.AsText();
+            Assert.Equal(anw, real);
+        }
+        [Fact]
+        public void asTextTestDelimeter()
+        {
+            var r = new Row(new List<ColumnDefinition>(), new List<string> { "Val1", "Val2"});
+            String anw = r.AsText();
+            Assert.Equal("Val1:Val2", anw);
+        }
+        [Fact]
+        public void asTextTestVal1Empty()
+        {
+            var r = new Row(new List<ColumnDefinition>(), new List<string> { "", "Val2" });
+            String anw = r.AsText();
+            Assert.Equal(":Val2", anw);
+        }
+        [Fact]
+        public void asTextTestVal2Empty()
+        {
+            var r = new Row(new List<ColumnDefinition>(), new List<string> { "Val1", "" });
+            String anw = r.AsText();
+            Assert.Equal("Val1:", anw);
+        }
+        [Fact]
+        public void asTextTestEmpty()
+        {
+            var r = new Row(new List<ColumnDefinition>(), new List<string> { "", "" });
+            String anw = r.AsText();
+            Assert.Equal(":", anw);
+        }
 
+        [Fact]
+        public void asTextVacioTest() {
+            var r = new Row(new List<ColumnDefinition>(), new List<string>());
+            string anw= r.AsText();
+            Assert.Equal("", anw);
+        }
+        [Fact]
+        public void ParseTest()
+        {
+            List<ColumnDefinition> cols = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"),
+                new ColumnDefinition(ColumnDefinition.DataType.Double, "Grade")
+            };
 
+            Row r = Row.Parse(cols, "Kevin:21:7.9");
+            Assert.Equal("Kevin", r.Values[0]);
+            Assert.Equal("21", r.Values[1]);
+            Assert.Equal("7.9", r.Values[2]);
+        }
 
+        [Fact]
+        public void ParseTestDelimiterInValue()
+        {
+            List<ColumnDefinition> cols = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Desc")
+            };
 
+            Row original = new Row(cols, new List<string> { "Igor", "val:con:delimitador" });
+            string texto = original.AsText();
+            Row r = Row.Parse(cols, texto);
+            Assert.Equal("Igor", r.Values[0]);
+            Assert.Equal("val:con:delimitador", r.Values[1]);
+        }
+
+        [Fact]
+        public void ParseRoundTrip()
+        {
+            List<ColumnDefinition> cols = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
+                new ColumnDefinition(ColumnDefinition.DataType.Int, "Age")
+            };
+
+            Row original = new Row(cols, new List<string> { "Pepe", "30" });
+            Row parsed = Row.Parse(cols, original.AsText());
+            Assert.Equal(original.Values[0], parsed.Values[0]);
+            Assert.Equal(original.Values[1], parsed.Values[1]);
         }
     }
 }
