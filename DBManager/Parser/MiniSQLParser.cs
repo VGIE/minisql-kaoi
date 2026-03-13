@@ -24,7 +24,7 @@ namespace DbManager
 
             const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<set_columns>(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+')(,(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+'))*)*\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<value>\'-?\d+(?<decimals>\.\d+)?\'|'[^']+')$";
 
-            const string deletePattern = @"^DELETE\s+FROM\s+(?<tableName>\w+)\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<literalValue>\'-?\d+(?<values>\.\d+)?\'|'[^']+')$";
+            const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<literalValue>\'-?\d+(?<values>\.\d+)?\'|'[^']+')$";
 
 
             //TODO DEADLINE 4
@@ -50,7 +50,7 @@ namespace DbManager
             {
                 Match match = Regex.Match(miniSQLQuery, selectPattern);
                 string tableName = match.Groups["table"].Value;
-                string columnsname = match.Groups["columns"].Value;
+                string columnsname = match.Groups["colums"].Value;
                 List<string> columnslist = CommaSeparatedNames(columnsname);
 
                 if (match.Groups["colName"].Success &&
@@ -68,6 +68,8 @@ namespace DbManager
 
                     return new Select(tableName, columnslist, cond);
                 }
+                
+                return new Select(tableName, columnslist, null);
 
             }
             else if (Regex.IsMatch(miniSQLQuery, insertPattern))
@@ -76,6 +78,13 @@ namespace DbManager
                 string tableName = match.Groups["table"].Value;
                 string values = match.Groups["values"].Value;
                 List<string> listvalues = CommaSeparatedNames(values);
+                for(int i = 0; i < listvalues.Count; i++)
+                {
+                    if (Regex.IsMatch(listvalues[i], @"^'.*'$"))
+                    {
+                        listvalues[i] = listvalues[i].Trim('\'');
+                    }
+                }
 
                 return new Insert(tableName, listvalues);
             }
@@ -89,7 +98,7 @@ namespace DbManager
             {
                 Match match = Regex.Match(miniSQLQuery, createTablePattern);
                 string tableName = match.Groups["table"].Value;
-                string columns = match.Groups["columns-defs"].Value;
+                string columns = match.Groups["column_defs"].Value;
                 List<ColumnDefinition> cd = new List<ColumnDefinition>();
                 ColumnDefinition.DataType t = ColumnDefinition.DataType.String;
                 string name = null;
@@ -99,20 +108,20 @@ namespace DbManager
                     for (int i = 0; i < separetec.Count; i++)
                     {
                         string[] type = separetec[i].Split(" ");
-                        if(type[2] == "TEXT")
+                        if(type[1] == "TEXT")
                         {
                             t = ColumnDefinition.DataType.String;
-                            name = type[1];
+                            name = type[0];
                         }
-                        else if (type[2] == "INT")
+                        else if (type[1] == "INT")
                         {
                             t = ColumnDefinition.DataType.Int;
-                            name = type[1];
+                            name = type[0];
                         }
-                        else if (type[2] == "DOUBLE")
+                        else if (type[1] == "DOUBLE")
                         {
                             t = ColumnDefinition.DataType.Double;
-                            name = type[1];
+                            name = type[0];
                         }
                         cd.Add(new ColumnDefinition(t, name));
                     }
@@ -155,7 +164,11 @@ namespace DbManager
                 string tableName = match.Groups["table"].Value;
                 string column = match.Groups["columnName"].Value;
                 string op = match.Groups["operator"].Value;
-                string literalValue = match.Groups["value"].Value;
+                string literalValue = match.Groups["literalValue"].Value;
+                if (Regex.IsMatch(literalValue, @"^'.*'$"))
+                    {
+                        literalValue = literalValue.Trim('\'');
+                    }
 
                 return new Delete(tableName, new Condition(column, op, literalValue));
 

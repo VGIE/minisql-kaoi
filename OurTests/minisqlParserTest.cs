@@ -15,42 +15,6 @@ namespace OurTests
         */
 
         
-         private Database db;
-    private Table table;
-    private List<ColumnDefinition> cd;
-    private List<string> values;
-    private MiniSQLParser miniSQLParser;
-
-    [Fact]
-    public void UpdateTest()
-    {
-        Start();
-    }
-
-    public void Start()
-    {
-        db = new Database("User1", "12345");
-        miniSQLParser = new MiniSQLParser();
-        cd = new List<ColumnDefinition>()
-        {
-        new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
-        new ColumnDefinition(ColumnDefinition.DataType.Int, "Age"),
-        new ColumnDefinition(ColumnDefinition.DataType.Double, "Height")
-        };
-
-
-        table = new Table("testTable", cd);
-
-        values = new List<String>() { "ainhoa", "20", "1.67" };
-        table.AddRow(new Row(cd, values));
-        values = new List<String>() { "Igor", "19", "1.77" };
-        table.AddRow(new Row(cd, values));
-        values = new List<String>() { "Oier", "23", "1.70" };
-        table.AddRow(new Row(cd, values));
-
-        db.AddTable(table);
-    }
-
     [Fact]
     public void UpdateTestsStringValue()
     {
@@ -87,42 +51,11 @@ namespace OurTests
 
         Assert.Null(update);
     }
-    
-       public void SelectTest()
-        {
-            Start2();
-        }
-
-        public void Start2()
-        {
-            db = new Database("user", "1234");
-            miniSQLParser = new MiniSQLParser();
-
-            cd = new List<ColumnDefinition>
-            {
-                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
-                new ColumnDefinition(ColumnDefinition.DataType.Int,"Age"),
-                new ColumnDefinition(ColumnDefinition.DataType.Double,"Height")
-            };
-
-            table = new Table("Test", cd);
-
-            values = new List<string> { "Ainhoa", "25", "1.62" };
-            table.AddRow(new Row(cd, values));
-            values = new List<string> { "Igor", "19", "1.87" };
-            table.AddRow(new Row(cd, values));
-            values = new List<string> { "Oier", "21", "1.75" };
-            table.AddRow(new Row(cd, values));
-
-            db.AddTable(table);
-        }
-
-
 
         [Fact]
         public void TestSelectAllColumns()
         {
-            Select select = MiniSQLParser.Parse("SELECT Name,Height,Age FROM TestTable") as Select;
+            Select select = MiniSQLParser.Parse("SELECT Name,Height,Age FROM Test") as Select;
             Assert.Equal("Test", select.Table);
             Assert.Contains("Name", select.Columns);
             Assert.Contains("Height", select.Columns);
@@ -135,7 +68,7 @@ namespace OurTests
         [Fact]
         public void TestSelelectColumnsDisOrderedWithCondition()
         {
-            Select select = MiniSQLParser.Parse("SELECT Age,Name FROM TestTable WHERE Name='Rodolfo'") as Select;
+            Select select = MiniSQLParser.Parse("SELECT Age,Name FROM Test WHERE Name='Rodolfo'") as Select;
             Assert.Equal("Test", select.Table);
             Assert.Contains("Age", select.Columns);
             Assert.Contains("Name", select.Columns);
@@ -146,8 +79,8 @@ namespace OurTests
         [Fact]
         public void TestSelectWithCondition()
         {
-            Select select = MiniSQLParser.Parse("SELECT Name,Age FROM TestTable WHERE Age>'50'") as Select;
-            Assert.Equal("TestTable", select.Table);
+            Select select = MiniSQLParser.Parse("SELECT Name,Age FROM Test WHERE Age>'50'") as Select;
+            Assert.Equal("Test", select.Table);
             Assert.Contains("Name", select.Columns);
             Assert.Contains("Age", select.Columns);
             Assert.Equal("Age", select.Where.ColumnName);
@@ -157,7 +90,7 @@ namespace OurTests
         [Fact]
         public void TestSelectWithoutColumns()
         {
-            var select = MiniSQLParser.Parse("SELECT FROM TestTable");           
+            var select = MiniSQLParser.Parse("SELECT FROM Test");           
             Assert.Null(select);
             
         }
@@ -165,7 +98,7 @@ namespace OurTests
         [Fact]
         public void TestSelectWithoutColumnsWithCondition()
         {
-            var select = MiniSQLParser.Parse("SELECT FROM TestTable WHERE Age>'50'");
+            var select = MiniSQLParser.Parse("SELECT FROM Test WHERE Age>'50'");
             Assert.Null(select);
 
         }
@@ -194,11 +127,52 @@ namespace OurTests
             Assert.Contains("Name", select3.Columns);
             Assert.Contains("Age", select3.Columns);
             Assert.Equal("Name", select3.Where.ColumnName);
-
-           
         }
 
-    
+
+    [Fact]
+        public void InsertTestValidValues()
+        {
+            
+            Insert insert = MiniSQLParser.Parse("INSERT INTO Test VALUES ('Ainhoa','20','1.67')") as Insert;
+
+            Assert.NotNull(insert);
+            Assert.Equal("Test", insert.Table);
+            Assert.Equal(3, insert.Values.Count); 
+            Assert.Equal("Ainhoa", insert.Values[0]);
+            Assert.Equal("20", insert.Values[1]);
+            Assert.Equal("1.67", insert.Values[2]);
+        }
+
+        [Fact]
+        public void DropTestValidValues()
+        {
+            DropTable drop = MiniSQLParser.Parse("DROP TABLE testTable") as DropTable;
+
+            Assert.NotNull(drop);
+        }
+        [Fact]
+        public void CreateTableTestValid()
+        {
+            
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE users (Name TEXT)") as CreateTable;
+
+            // Assert
+            Assert.NotNull(create);
+            Assert.Equal("users", create.Table);
+        
+        }
+        
+        [Fact]
+        public void DeleteTest_Valid_WithWhere_String_NoSpaces()
+        {
+        Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name='Ainhoa'") as Delete;
+
+        Assert.NotNull(delete);
+        Assert.Equal("Test", delete.Table);
+
+        }
+            
 
     }
 }
