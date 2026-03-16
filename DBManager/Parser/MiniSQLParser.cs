@@ -80,6 +80,10 @@ namespace DbManager
                 List<string> listvalues = CommaSeparatedNames(values);
                 for(int i = 0; i < listvalues.Count; i++)
                 {
+                    //Tengo que hacer que star y end comprobar que haya comas y sino devuelva null
+                    if () {
+                        return null;
+                    }
                     if (Regex.IsMatch(listvalues[i], @"^'.*'$"))
                     {
                         listvalues[i] = listvalues[i].Trim('\'');
