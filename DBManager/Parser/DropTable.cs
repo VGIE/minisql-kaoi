@@ -19,8 +19,19 @@ namespace DbManager
         {
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //DropTableSuccess or the last error in the database
-            
-            return null;
+            Table tabla = database.TableByName(Table);
+
+            if (database == null)
+                return Constants.Error;
+
+            if (tabla == null)
+                return Constants.TableDoesNotExistError;
+
+            if (database.DropTable(Table))
+                return Constants.DropTableSuccess;
+
+
+            return Constants.Error;
             
         }
     }
