@@ -22,8 +22,23 @@ namespace DbManager
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //UpdateSuccess or the last error in the database
             
-            return null;
-            
+            if(database == null)
+            {
+                return Constants.Error;
+            }
+            else
+            {
+                Table t = database.TableByName(Table);
+                if(t == null)
+                {
+                    return Constants.TableDoesNotExistError;
+                }
+                else
+                {
+                    return Constants.UpdateSuccess;
+                }
+            }
+
         }
 
        
