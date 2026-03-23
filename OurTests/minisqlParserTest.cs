@@ -162,12 +162,19 @@ namespace OurTests
         [Fact]
         public void CreateTableTestValid()
         {
-            
+
             CreateTable create = MiniSQLParser.Parse("CREATE TABLE users (Name TEXT)") as CreateTable;
 
-            // Assert
             Assert.NotNull(create);
             Assert.Equal("users", create.Table);
+
+        }
+        [Fact]
+        public void CreateTableSpace()
+        {
+            
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE users (Name TEXT , Age INT) ") as CreateTable;
+            Assert.Null(create);
         
         }
         

@@ -114,7 +114,14 @@ namespace DbManager
                 if (columns != null && columns!="")
                 {
                     List<string> separetec = CommaSeparatedNames(columns);
-                    for (int i = 0; i < separetec.Count; i++)
+                    foreach (string valus in separetec)
+                    {
+                        if (valus.StartsWith(" ") || valus.EndsWith(" "))
+                        {
+                            return null;
+                        }
+                    }
+                        for (int i = 0; i < separetec.Count; i++)
                     {
                         string[] type = separetec[i].Split(" ");
                         if(type[1] == "TEXT")
