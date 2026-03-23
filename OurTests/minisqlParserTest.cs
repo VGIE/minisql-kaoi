@@ -143,6 +143,14 @@ namespace OurTests
             Assert.Equal("20", insert.Values[1]);
             Assert.Equal("1.67", insert.Values[2]);
         }
+        [Fact]
+        public void InsertTestSpaces()
+        {
+
+            Insert insert = MiniSQLParser.Parse("INSERT INTO Test VALUES ('Ainhoa ', ' 20' , '1.67')") as Insert;
+
+            Assert.Null(insert);
+        }
 
         [Fact]
         public void DropTestValidValues()

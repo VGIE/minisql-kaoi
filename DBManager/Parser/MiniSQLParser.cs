@@ -25,7 +25,7 @@ namespace DbManager
             const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<set_columns>(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+')(,(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+'))*)*\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<value>\'-?\d+(?<decimals>\.\d+)?\'|'[^']+')$";
 
             const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<literalValue>\'-?\d+(?<values>\.\d+)?\'|'[^']+')$";
-
+            //espacio despues y antes de la coma, no deberia aceptarlos
 
             //TODO DEADLINE 4
             const string createSecurityProfilePattern = null;
@@ -78,12 +78,17 @@ namespace DbManager
                 string tableName = match.Groups["table"].Value;
                 string values = match.Groups["values"].Value;
                 List<string> listvalues = CommaSeparatedNames(values);
-                for(int i = 0; i < listvalues.Count; i++)
+                foreach (string valus in listvalues)
                 {
-                    //Tengo que hacer que star y end comprobar que haya comas y sino devuelva null
-                    if () {
+                    char l1 = valus[0];
+                    char l2 = valus[valus.Length-1];
+                    if (l1 ==' ' || l2 == ' ')
+                    {
                         return null;
                     }
+                }
+                for(int i = 0; i < listvalues.Count; i++)
+                {
                     if (Regex.IsMatch(listvalues[i], @"^'.*'$"))
                     {
                         listvalues[i] = listvalues[i].Trim('\'');
@@ -106,7 +111,7 @@ namespace DbManager
                 List<ColumnDefinition> cd = new List<ColumnDefinition>();
                 ColumnDefinition.DataType t = ColumnDefinition.DataType.String;
                 string name = null;
-                if (columns != null)
+                if (columns != null && columns!="")
                 {
                     List<string> separetec = CommaSeparatedNames(columns);
                     for (int i = 0; i < separetec.Count; i++)
