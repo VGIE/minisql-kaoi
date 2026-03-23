@@ -34,6 +34,49 @@ namespace OurTests
             string expected = "['Name','Age']{'Rodolfo','25'}";
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void TestSelectWithNonExistingColumn()
+        {
+            Database database = Database.CreateTestDatabase();
+            Table table = Table.CreateTestTable();
+
+            database.AddTable(table);
+
+            Select select = new Select("TestTable", new List<string> { "NonExistingColumn" });
+            string result = select.Execute(database);
+            string expected = Constants.ColumnDoesNotExistError;
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void TestSelectWithNonExistingTable()
+        {
+            Database database = Database.CreateTestDatabase();
+            Table table = Table.CreateTestTable();
+
+            database.AddTable(table);
+
+            Select select = new Select("NonExistingTable", new List<string> { Table.TestColumn1Name });
+            string result = select.Execute(database);
+            string expected = Constants.TableDoesNotExistError;
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void TestSelectWithConditionOnNonExistingColumn()
+        {
+            Database database = Database.CreateTestDatabase();
+            Table table = Table.CreateTestTable();
+
+            database.AddTable(table);
+
+            Condition condition = new Condition("NonExistingColumn", "=", "25");
+            Select select = new Select("TestTable", new List<string> { Table.TestColumn1Name }, condition);
+            string result = select.Execute(database);
+            string expected = Constants.ColumnDoesNotExistError;
+            Assert.Equal(expected, result);
+        }
         
     }
 }
