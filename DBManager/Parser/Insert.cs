@@ -17,13 +17,18 @@ namespace DbManager
             Values = values;
         }
 
-        public string Execute(Database database)
+        public string Execute(Database database)    
         {
             //TODO DEADLINE 3: Run the query and return the appropriate message
             //InsertSuccess or the last error in the database
-            
-            return null;
-            
+            Table tabla = database.TableByName(Table);
+            if (database==null)
+                return Constants.Error;
+            else if (tabla == null)
+                return Constants.TableDoesNotExistError;
+            else if(database.Insert(Table, Values))
+                return Constants.InsertSuccess;
+            return Constants.Error;             
         }
     }
 }
