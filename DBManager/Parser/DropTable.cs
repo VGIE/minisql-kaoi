@@ -30,7 +30,6 @@ namespace DbManager
             if (database.DropTable(Table))
                 return Constants.DropTableSuccess;
 
-
             return Constants.Error;
             
         }

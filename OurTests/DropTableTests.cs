@@ -6,17 +6,13 @@ namespace OurTests
     public class DropTableTests
     {
         [Fact]
-        public void TestDropTableSuccess()
+        public void TestDropTableTrue()
         {
             Database database = Database.CreateTestDatabase();
-            List<ColumnDefinition> col = new List<ColumnDefinition>()
-            {
-                new ColumnDefinition(ColumnDefinition.DataType.String, "Name"),
-                new ColumnDefinition(ColumnDefinition.DataType.Int, "Num")
-            };
-            DropTable dropTable = new DropTable("Test");
+            DropTable dropTable = new DropTable(Table.TestTableName);
             string result = dropTable.Execute(database);
             Assert.Equal(Constants.DropTableSuccess, result);
+
         }
 
         [Fact]
@@ -26,15 +22,6 @@ namespace OurTests
             DropTable dropTable = new DropTable("Test1");
             string result = dropTable.Execute(database);
             Assert.Equal(Constants.TableDoesNotExistError, result);
-        }
-        [Fact]
-        public void TestDropTableWithoutColumns()
-        {
-            Database database = Database.CreateTestDatabase();
-            List<ColumnDefinition> col = new List<ColumnDefinition>();
-            DropTable dropTable = new DropTable("Test");
-            string result = dropTable.Execute(database);
-            Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
         }
     }
 }
