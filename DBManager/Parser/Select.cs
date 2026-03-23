@@ -24,7 +24,34 @@ namespace DbManager
         {
             //TODO DEADLINE 3: Run the query and return the table as a string (or the last error in the database)
             
-            return null;
+            Table tabla = database.TableByName(Table);
+
+            if (database == null)
+                return Constants.Error;
+
+            if (tabla == null)
+                return Constants.TableDoesNotExistError;
+
+            foreach(string column in Columns)
+            {
+                if(tabla.ColumnByName(column) == null)
+                    return Constants.ColumnDoesNotExistError;
+            }
+
+            if(Where != null)
+            {
+                if(Where.ColumnName == null || (tabla.ColumnByName(Where.ColumnName)) == null)
+                {
+                    return Constants.ColumnDoesNotExistError;
+                }
+            }
+
+            Table rTable = database.Select(Table, Columns, Where);
+
+            if(rTable == null)
+                return database.LastErrorMessage;
+
+            return rTable.ToString(); 
             
         }
     }
