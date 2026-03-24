@@ -35,6 +35,11 @@ namespace DbManager
                 }
                 else
                 {
+                    ColumnDefinition colunm = t.ColumnByName(Where.ColumnName);
+                    if(colunm == null)
+                    {
+                        return Constants.ColumnDoesNotExistError;
+                    }
                     return Constants.UpdateSuccess;
                 }
             }

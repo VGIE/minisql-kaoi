@@ -157,14 +157,13 @@ namespace OurTests
             
             CreateTable create = MiniSQLParser.Parse("CREATE TABLE users (Name TEXT)") as CreateTable;
 
-            // Assert
             Assert.NotNull(create);
             Assert.Equal("users", create.Table);
         
         }
         
         [Fact]
-        public void DeleteTest_Valid_WithWhere_String_NoSpaces()
+        public void DeleteTestValidWithWhereStringNoSpaces()
         {
         Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name='Ainhoa'") as Delete;
 
