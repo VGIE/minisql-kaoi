@@ -188,7 +188,7 @@ namespace OurTests
             Assert.NotNull(create);
         }
         [Fact]
-        public void DeleteTest_Valid_WithWhere_String_NoSpaces()
+        public void DeleteTestValidWithWhereStringNoSpaces()
         {
             Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name='Ainhoa'") as Delete;
 
