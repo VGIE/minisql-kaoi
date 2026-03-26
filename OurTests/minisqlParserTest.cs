@@ -187,7 +187,67 @@ namespace OurTests
         Assert.Equal("Test", delete.Table);
 
         }
-            
+/*
+        [Fact]
+        public void GrantSelectTest()
+        {
+            Grant grant = MiniSQLParser.Parse("GRANT SELECT ON TestTable TO Admin") as Grant;
+            Assert.NotNull(grant);
+            Assert.Equal("SELECT", grant.PrivilegeName);
+            Assert.Equal("TestTable", grant.TableName);
+            Assert.Equal("Admin", grant.ProfileName);
+        }
 
+        [Fact]
+        public void GrantInsertTest()
+        {
+            Grant grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable TO Admin") as Grant;
+            Assert.NotNull(grant);
+            Assert.Equal("INSERT", grant.PrivilegeName);
+            Assert.Equal("TestTable", grant.TableName);
+            Assert.Equal("Admin", grant.ProfileName);
+        }
+
+        [Fact]
+        public void GrantDeleteTest()
+        {
+            Grant grant = MiniSQLParser.Parse("GRANTDELETE ON TestTable TO UserOne") as Grant;
+            Assert.NotNull(grant);
+            Assert.Equal("DELETE", grant.PrivilegeName);
+            Assert.Equal("TestTable", grant.TableName);
+            Assert.Equal("UserOne", grant.ProfileName);
+        }
+
+        [Fact]
+        public void GrantUpdateTest()
+        {
+            Grant grant = MiniSQLParser.Parse("GRANT UPDATE ON TestTable4 TO UserFourS") as Grant;
+            Assert.NotNull(grant);
+            Assert.Equal("UPDATE", grant.PrivilegeName);
+            Assert.Equal("TestTable4", grant.TableName);
+            Assert.Equal("UserFourS", grant.ProfileName);
+        }
+
+        [Fact]
+        public void GrantInvalidPrivilegeTest()
+        {
+            var grant = MiniSQLParser.Parse("GRANT INVALID ON TestTable TO User") as Grant;
+            Assert.Null(grant);
+        }
+
+        [Fact]
+        public void GrantInvalidTableNameTest()
+        {
+            var grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable_2n TO User") as Grant;
+            Assert.Null(grant);
+        }
+
+        [Fact]
+        public void GrantInvalidProfileNameTest()
+        {
+            var grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable TO User_1") as Grant;
+            Assert.Null(grant);
+        }
+        */
     }
 }
