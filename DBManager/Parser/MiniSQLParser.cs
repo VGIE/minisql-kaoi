@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace DbManager
@@ -20,7 +21,7 @@ namespace DbManager
 
             //Note: The parsing of CREATE TABLE should accept empty columns "()"
             //And then, an execution error should be given if a CreateTable without columns is executed
-            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[A-Za-z][A-Za-z0-9]*)\s*\((?<column_defs>[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT)(?:\s*,\s*[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT))*)\)\s*;?\s*$";
+            const string createTablePattern = @"CREATE\s+TABLE\s+(?<table>[A-Za-z][A-Za-z0-9]*)\s*\((?<column_defs>(?:[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT)(?:\s*,\s*[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT))*)?)\)\s*;?\s*$";
 
             const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<set_columns>(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+')(,(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+'))*)*\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<value>\'-?\d+(?<decimals>\.\d+)?\'|'[^']+')$";
 
@@ -78,11 +79,15 @@ namespace DbManager
                 string tableName = match.Groups["table"].Value;
                 string values = match.Groups["values"].Value;
                 List<string> listvalues = CommaSeparatedNames(values);
+                if (listvalues.Count == 1 && listvalues[0].Split('\'').Length-1 > 2)
+                {
+                    return null;
+                }
                 foreach (string valus in listvalues)
                 {
                     char l1 = valus[0];
                     char l2 = valus[valus.Length-1];
-                    if (l1 ==' ' || l2 == ' ')
+                    if (l1 !='\'' || l2 != '\'' )
                     {
                         return null;
                     }
@@ -108,10 +113,11 @@ namespace DbManager
                 Match match = Regex.Match(miniSQLQuery, createTablePattern);
                 string tableName = match.Groups["table"].Value;
                 string columns = match.Groups["column_defs"].Value;
+
                 List<ColumnDefinition> cd = new List<ColumnDefinition>();
                 ColumnDefinition.DataType t = ColumnDefinition.DataType.String;
                 string name = null;
-                if (columns != null && columns!="")
+                if (columns != null || columns!="")
                 {
                     List<string> separetec = CommaSeparatedNames(columns);
                     foreach (string valus in separetec)
@@ -143,6 +149,7 @@ namespace DbManager
                     }
                     
                 }
+
 
                 return new CreateTable(tableName,cd);
             }

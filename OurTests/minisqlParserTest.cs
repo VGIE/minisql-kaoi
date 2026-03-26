@@ -144,10 +144,10 @@ namespace OurTests
             Assert.Equal("1.67", insert.Values[2]);
         }
         [Fact]
-        public void InsertTestSpaces()
+        public void InsertTestSpacesAndNoComilla()
         {
 
-            Insert insert = MiniSQLParser.Parse("INSERT INTO Test VALUES ('Ainhoa ', ' 20' , '1.67')") as Insert;
+            Insert insert = MiniSQLParser.Parse("INSERT INTO Test VALUES ('Ainhoa ,'20 ' , ' 1.67')") as Insert;
 
             Assert.Null(insert);
         }
@@ -177,17 +177,21 @@ namespace OurTests
             Assert.Null(create);
         
         }
-        
+        [Fact]
+        public void CreateTableEmpty()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE users ()") as CreateTable;
+            Assert.NotNull(create);
+        }
         [Fact]
         public void DeleteTest_Valid_WithWhere_String_NoSpaces()
         {
-        Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name='Ainhoa'") as Delete;
+            Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name='Ainhoa'") as Delete;
 
-        Assert.NotNull(delete);
-        Assert.Equal("Test", delete.Table);
+            Assert.NotNull(delete);
+            Assert.Equal("Test", delete.Table);
 
         }
-            
 
     }
 }
