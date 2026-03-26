@@ -43,5 +43,17 @@ namespace OurTests
             string result = createTable.Execute(database);
             Assert.Equal(Constants.DatabaseCreatedWithoutColumnsError, result);
         }
+
+        [Fact]
+        public void TestCreateTableNullDatabase()
+        {
+            List<ColumnDefinition> col = new List<ColumnDefinition>()
+            {
+                new ColumnDefinition(ColumnDefinition.DataType.String, "Name")
+            };
+            CreateTable createTable = new CreateTable("Test", col);
+            string result = createTable.Execute(null);
+            Assert.Equal(Constants.Error, result);
+        }
     }
 }
