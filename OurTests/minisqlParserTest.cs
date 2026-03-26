@@ -26,7 +26,6 @@ namespace OurTests
         Assert.Equal("Ainhoa Martinez", update.Columns[0].Value);
         Assert.Equal("Name", update.Where.ColumnName);
         Assert.Equal("Ainhoa", update.Where.LiteralValue);
-
     }
 
     [Fact]
@@ -183,6 +182,11 @@ namespace OurTests
             CreateTable create = MiniSQLParser.Parse("CREATE TABLE users ()") as CreateTable;
             Assert.NotNull(create);
         }
+        public void CreateTableE()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE users ()") as CreateTable;
+            Assert.NotNull(create);
+        }
         [Fact]
         public void DeleteTest_Valid_WithWhere_String_NoSpaces()
         {
@@ -190,7 +194,38 @@ namespace OurTests
 
             Assert.NotNull(delete);
             Assert.Equal("Test", delete.Table);
+            Assert.Equal("Name", delete.Where.ColumnName);
+        }
+        [Fact]
+        public void DeleteTest_Various_Spaces()
+        {
+            Delete delete = MiniSQLParser.Parse("DELETE FROM   Test WHERE     Name='Ainhoa'") as Delete;
 
+            Assert.NotNull(delete);
+            Assert.Equal("Test", delete.Table);
+            Assert.Equal("Name", delete.Where.ColumnName);
+        }
+        [Fact]
+
+            public void DeleteTest_Spaces()
+        {
+            Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name= ' Ainhoa'") as Delete;
+
+            Assert.Null(delete);
+        }
+        [Fact]
+        public void DeleteTest_No_Where()
+        {
+            Delete delete = MiniSQLParser.Parse("DELETE FROM Test") as Delete;
+
+            Assert.Null(delete);
+        }
+
+        public void DeleteTest_Comma()
+        {
+            Delete delete = MiniSQLParser.Parse("DELETE FROM Test WHERE Name='Ai,nhoa'") as Delete;
+
+            Assert.Null(delete);
         }
 
     }
