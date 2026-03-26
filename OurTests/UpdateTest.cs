@@ -63,12 +63,20 @@ namespace OurTests
             String result = updateTest.Execute(databaseTest);
             Assert.Equal(Constants.ColumnDoesNotExistError,result);
         }
-        /*
+
         [Fact]
-        public void TestDeleteError()
+        public void TestUpdateTableDoesColumnNotExistInSetValues()
         {
-            
+            Database databaseTest = Start();
+            List<SetValue> set= new List<SetValue>{
+                new SetValue("UnknowColunm","22"),
+                new SetValue("City","Otxandio")
+                };
+            Condition con = new Condition("Name","=", "Kevin");
+            Update updateTest = new Update("Test",set, con);
+            String result = updateTest.Execute(databaseTest);
+            Assert.Equal(Constants.ColumnDoesNotExistError,result);
         }
-        */
+
     }
 }
