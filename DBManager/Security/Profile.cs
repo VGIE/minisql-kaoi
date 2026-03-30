@@ -25,9 +25,20 @@ namespace DbManager.Security
         public bool RevokePrivilege(string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Revoke this privilege on this table. Return false if there is an error, true otherwise
-            
-            return false;
-            
+            if (table == null || privilege == null)
+            {
+                return false;
+            }
+            if (!PrivilegesOn.ContainsKey(table))
+            {
+                return false;
+            }
+            if (!PrivilegesOn[table].Contains(privilege))
+            {
+                return false;
+            }
+            PrivilegesOn[table].Remove(privilege);
+            return true;
         }
 
         public bool IsGrantedPrivilege(string table, Privilege privilege)

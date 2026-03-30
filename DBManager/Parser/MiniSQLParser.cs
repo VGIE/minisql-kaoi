@@ -29,15 +29,15 @@ namespace DbManager
             //espacio despues y antes de la coma, no deberia aceptarlos
 
             //TODO DEADLINE 4
-            const string createSecurityProfilePattern = null;
+            const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+([A-Za-z][A-Za-z0-9]*)\s*;?\s*$";
 
-            const string dropSecurityProfilePattern = null;
+            const string dropSecurityProfilePattern = @"^DROP\s+SECURITY\s+PROFILE\s+([A-Za-z][A-Za-z0-9]*)\s*;?\s*$";
 
             const string grantPattern = @"^GRANT\s+(?<PrivilegeType>SELECT|INSERT|UPDATE|DELETE)\s+ON\s+(?<TableName>[A-Za-z][A-Za-z0-9]*)\s+TO\s+(?<SecurityProfile>[A-Za-z][A-Za-z0-9]*)\s*;?\s*$";
 
             const string revokePattern = @"^REVOKE\s+(?<PrivilegeType>SELECT|INSERT|UPDATE|DELETE)\s+ON\s+(?<TableName>[A-Za-z][A-Za-z0-9]*)\s+FROM\s+(?<SecurityProfile>[A-Za-z][A-Za-z0-9]*)\s*;?\s*$";
 
-            const string addUserPattern = null;
+            const string addUserPattern = @"^ADD\s+USER\s+\(\s*([A-Za-z][A-Za-z0-9]*)\s*,\s*([a-zA-Z0-9]+)\s*,\s*([A-Za-z][A-Za-z0-9]*)\s*\)\s*;?\s*$";
 
             const string deleteUserPattern = null;
 
