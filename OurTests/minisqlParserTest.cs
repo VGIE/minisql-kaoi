@@ -284,7 +284,6 @@ namespace OurTests
 
             Assert.Null(delete);
         }
-<<<<<<< HEAD
 
         [Fact]
         public void GrantSelectTest()
@@ -332,11 +331,8 @@ namespace OurTests
             var grant = MiniSQLParser.Parse("GRANT INVALID ON TestTable TO User") as Grant;
             Assert.Null(grant);
         }
-=======
->>>>>>> kevin
 
 
-<<<<<<< HEAD
         [Fact]
         public void GrantInvalidProfileNameTest()
         {
@@ -398,7 +394,6 @@ namespace OurTests
             Assert.Null(revoke);
         }
 
-=======
         /*
                 [Fact]
                 public void GrantSelectTest()
@@ -461,6 +456,5 @@ namespace OurTests
                     Assert.Null(grant);
                 }
                 */
->>>>>>> kevin
     }
 }
