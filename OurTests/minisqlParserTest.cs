@@ -150,6 +150,16 @@ namespace OurTests
 
             Assert.Null(insert);
         }
+        [Fact]
+        public void InsertTestCommasInEachColumn()
+        {
+            MiniSqlQuery insert = MiniSQLParser.Parse("INSERT INTO Test VALUES ('Kevin' 'A,inhoa' '20')");
+            Assert.Null(insert);
+            MiniSqlQuery insert2 = MiniSQLParser.Parse("INSERT INTO Test VALUES ('Kevin' 'Ainhoa' '20,')");
+            Assert.Null(insert2);
+            MiniSqlQuery insert3 = MiniSQLParser.Parse("INSERT INTO Test VALUES ('K,evin' 'Ainhoa' '20')");
+            Assert.Null(insert3);
+        }
 
         [Fact]
         public void DropTestValidValues()
