@@ -21,7 +21,9 @@ namespace DbManager.Security
         public bool IsUserAdmin()
         {
             //TODO DEADLINE 5: Return true if the user logged-in (m_username) is the admin, false otherwise
-            
+            if (m_username == "admin")
+                return true;
+
             return false;
         }
 
