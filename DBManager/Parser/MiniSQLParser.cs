@@ -39,7 +39,7 @@ namespace DbManager
 
             const string addUserPattern = @"^ADD\s+USER\s+\(\s*([A-Za-z][A-Za-z0-9]*)\s*,\s*([a-zA-Z0-9]+)\s*,\s*([A-Za-z][A-Za-z0-9]*)\s*\)\s*;?\s*$";
 
-            const string deleteUserPattern = null;
+            const string deleteUserPattern = @"^DELETE\s+USER\s+(?<user>[A-Za-z]+)\s*;?\s*$";
 
 
             //TODO DEADLINE 2
@@ -215,6 +215,12 @@ namespace DbManager
                 string securityProfile = match.Groups["SecurityProfile"].Value;
 
                 return new Revoke(privilegeType, tableName, securityProfile);
+            }
+            else if (Regex.IsMatch(miniSQLQuery,deleteUserPattern))
+            {
+                Match match = Regex.Match(miniSQLQuery, deleteUserPattern);
+                string user = match.Groups["user"].Value;
+                return new DeleteUser(user);
             }
 
             return null;
