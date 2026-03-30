@@ -182,11 +182,37 @@ namespace OurTests
             CreateTable create = MiniSQLParser.Parse("CREATE TABLE users ()") as CreateTable;
             Assert.NotNull(create);
         }
-        public void CreateTableE()
+        [Fact]
+        public void CreateTableNothing()
         {
-            CreateTable create = MiniSQLParser.Parse("CREATE TABLE users ()") as CreateTable;
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE") as CreateTable;
+            Assert.Null(create);
+        }
+        [Fact]
+        public void CreateTableNoTableName()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE (Name TEXT") as CreateTable;
+            Assert.Null(create);
+        }
+        [Fact]
+        public void CreateTableMoreColumns()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE user (Name TEXT,Age INT)") as CreateTable;
             Assert.NotNull(create);
         }
+        [Fact]
+        public void CreateTableNoParentesis()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE user Name TEXT,Age INT") as CreateTable;
+            Assert.Null(create);
+        }
+        [Fact]
+        public void CreateTableEmptySpaces()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE Users (   )") as CreateTable;
+            Assert.NotNull(create);
+        }
+
         [Fact]
         public void DeleteTestValidWithWhereStringNoSpaces()
         {
