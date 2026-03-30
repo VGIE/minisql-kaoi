@@ -227,7 +227,7 @@ namespace OurTests
 
             Assert.Null(delete);
         }
-/*
+
         [Fact]
         public void GrantSelectTest()
         {
@@ -251,7 +251,7 @@ namespace OurTests
         [Fact]
         public void GrantDeleteTest()
         {
-            Grant grant = MiniSQLParser.Parse("GRANTDELETE ON TestTable TO UserOne") as Grant;
+            Grant grant = MiniSQLParser.Parse("GRANT DELETE ON TestTable TO UserOne") as Grant;
             Assert.NotNull(grant);
             Assert.Equal("DELETE", grant.PrivilegeName);
             Assert.Equal("TestTable", grant.TableName);
@@ -288,6 +288,60 @@ namespace OurTests
             var grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable TO User_1") as Grant;
             Assert.Null(grant);
         }
-        */
+
+        [Fact]
+        public void RevokeSelectTest()
+        {
+            Revoke revoke = MiniSQLParser.Parse("REVOKE SELECT ON TestTable FROM Admin") as Revoke;
+            Assert.NotNull(revoke);
+            Assert.Equal("SELECT", revoke.PrivilegeName);
+            Assert.Equal("TestTable", revoke.TableName);
+            Assert.Equal("Admin", revoke.ProfileName);
+        }
+
+        [Fact]
+        public void RevokeInsertTest()
+        {
+            Revoke revoke = MiniSQLParser.Parse("REVOKE INSERT ON TestTable FROM Admin") as Revoke;
+            Assert.NotNull(revoke);
+            Assert.Equal("INSERT", revoke.PrivilegeName);
+            Assert.Equal("TestTable", revoke.TableName);
+            Assert.Equal("Admin", revoke.ProfileName);
+        }
+
+        [Fact]
+        public void RevokeDeleteTest()
+        {
+            Revoke revoke = MiniSQLParser.Parse("REVOKE DELETE ON TestTable FROM Admin") as Revoke;
+            Assert.NotNull(revoke);
+            Assert.Equal("DELETE", revoke.PrivilegeName);
+            Assert.Equal("TestTable", revoke.TableName);
+            Assert.Equal("Admin", revoke.ProfileName);
+        }
+
+        [Fact]
+        public void RevokeUpdateTest()
+        {
+            Revoke revoke = MiniSQLParser.Parse("REVOKE UPDATE ON TestTable4 FROM UserFourS") as Revoke;
+            Assert.NotNull(revoke);
+            Assert.Equal("UPDATE", revoke.PrivilegeName);
+            Assert.Equal("TestTable4", revoke.TableName);
+            Assert.Equal("UserFourS", revoke.ProfileName);
+        }
+
+        [Fact]
+        public void RevokeInvalidPrivilegeTest()
+        {
+            var revoke = MiniSQLParser.Parse("REVOKE INVALID ON TestTable FROM User") as Revoke;
+            Assert.Null(revoke);
+        }
+
+        [Fact]
+        public void RevokeInvalidTableNameTest()
+        {
+            var revoke = MiniSQLParser.Parse("REVOKE INSERT ON TestTable_2n FROM User") as Revoke;
+            Assert.Null(revoke);
+        }
+
     }
 }

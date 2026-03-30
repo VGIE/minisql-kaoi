@@ -198,6 +198,24 @@ namespace DbManager
             }
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+            else if (Regex.IsMatch(miniSQLQuery, grantPattern))
+            {
+                Match match = Regex.Match(miniSQLQuery, grantPattern);
+                string privilegeType = match.Groups["PrivilegeType"].Value;
+                string tableName = match.Groups["TableName"].Value;
+                string securityProfile = match.Groups["SecurityProfile"].Value;
+
+                return new Grant(privilegeType, tableName, securityProfile);
+            }
+            else if (Regex.IsMatch(miniSQLQuery, revokePattern))
+            {
+                Match match = Regex.Match(miniSQLQuery, revokePattern);
+                string privilegeType = match.Groups["PrivilegeType"].Value;
+                string tableName = match.Groups["TableName"].Value;
+                string securityProfile = match.Groups["SecurityProfile"].Value;
+
+                return new Revoke(privilegeType, tableName, securityProfile);
+            }
 
             return null;
 
