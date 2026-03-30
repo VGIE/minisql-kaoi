@@ -219,8 +219,16 @@ namespace OurTests
         [Fact]
         public void CreateTableEmptySpaces()
         {
-            CreateTable create = MiniSQLParser.Parse("CREATE TABLE Users (   )") as CreateTable;
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE user (   )") as CreateTable;
             Assert.NotNull(create);
+        }
+        [Fact]
+        public void CreateTableSpacesColumn()
+        {
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE user (name       TEXT)") as CreateTable;
+            Assert.NotNull(create);
+            Assert.Equal("name", create.ColumnsParameters[0].Name);
+
         }
 
         [Fact]

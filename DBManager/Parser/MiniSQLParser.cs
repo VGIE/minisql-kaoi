@@ -130,17 +130,17 @@ namespace DbManager
                         for (int i = 0; i < separetec.Count; i++)
                     {
                         string[] type = separetec[i].Split(" ");
-                        if(type[1] == "TEXT")
+                        if(type[type.Length-1] == "TEXT")
                         {
                             t = ColumnDefinition.DataType.String;
                             name = type[0];
                         }
-                        else if (type[1] == "INT")
+                        else if (type[type.Length - 1] == "INT")
                         {
                             t = ColumnDefinition.DataType.Int;
                             name = type[0];
                         }
-                        else if (type[1] == "DOUBLE")
+                        else if (type[type.Length - 1] == "DOUBLE")
                         {
                             t = ColumnDefinition.DataType.Double;
                             name = type[0];
