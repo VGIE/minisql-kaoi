@@ -394,6 +394,32 @@ namespace OurTests
             Assert.Null(revoke);
         }
 
+        [Fact]
+        public void DeleteUserTestValid()
+        {
+            DeleteUser delete = MiniSQLParser.Parse("DELETE USER Kevin") as DeleteUser;
+            Assert.NotNull(delete);
+            Assert.Equal("Kevin", delete.Username);
+        }
+
+        [Fact]
+        public void DeleteUserTestWithMultipleSpaces()
+        {
+            DeleteUser delete = MiniSQLParser.Parse("DELETE    USER   Kevin") as DeleteUser;
+            Assert.NotNull(delete);
+            Assert.Equal("Kevin", delete.Username);
+        }
+
+        [Fact]
+        public void DeleteUserTestWithOutUserName()
+        {
+            DeleteUser delete = MiniSQLParser.Parse("DELETE USER") as DeleteUser;
+            Assert.Null(delete);
+        }
+
+
+
+
         /*
                 [Fact]
                 public void GrantSelectTest()
