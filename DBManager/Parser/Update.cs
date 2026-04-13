@@ -53,7 +53,7 @@ namespace DbManager
                     {
                        return Constants.UpdateSuccess; 
                     }
-                    
+                    return Constants.SyntaxError;
                 }
             }
 
