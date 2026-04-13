@@ -78,5 +78,15 @@ namespace OurTests
             Assert.Equal(Constants.ColumnDoesNotExistError,result);
         }
 
+        [Fact]
+        public void TestUpdateWithSqlSentence()
+        {
+            Database databaseTest = Start();
+            Update update = MiniSQLParser.Parse("UPDATE Test SET Name='Ainhoa Martinez' WHERE Name='Ainhoa'") as Update;
+            Condition c = new Condition("Name", "=", "Ainhoa Martinez");
+            Table t = databaseTest.Select("Test", new List<string>{"Name"},c);
+            Assert.Equal(Constants.UpdateSuccess,update.Execute(databaseTest));
+        }
+
     }
 }

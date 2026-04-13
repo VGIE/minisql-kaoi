@@ -48,7 +48,12 @@ namespace DbManager
                             return Constants.ColumnDoesNotExistError;
                         }
                     }
-                    return Constants.UpdateSuccess;
+                    bool done =t.Update(Columns, Where);
+                    if(done)
+                    {
+                       return Constants.UpdateSuccess; 
+                    }
+                    return Constants.SyntaxError;
                 }
             }
 
