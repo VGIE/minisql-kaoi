@@ -57,14 +57,11 @@ namespace DbManager.Security
                 return;
             }
 
-            if(IsUserAdmin() && IsGrantedPrivilege(profileName, table, privilege))
+            Profile profile = ProfileByName(profileName);
+
+            if (profile != null && table != null)
             {
-                Profile profile = ProfileByName(profileName);
-                if((profile != null) || (table != null))
-                {
-                    profile.GrantPrivilege(table, privilege);
-                }
-                
+                profile.GrantPrivilege(table, privilege);
             }
             
         }
