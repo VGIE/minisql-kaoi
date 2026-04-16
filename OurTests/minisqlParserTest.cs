@@ -200,6 +200,15 @@ namespace OurTests
 
         }
         [Fact]
+        public void CreateTableTestWithoutSpaceBeforeTheParenthesis()
+        {
+
+            CreateTable create = MiniSQLParser.Parse("CREATE TABLE users(Name TEXT)") as CreateTable;
+
+            Assert.Null(create);
+
+        }
+        [Fact]
         public void CreateTableSpace()
         {
 

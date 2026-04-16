@@ -21,7 +21,7 @@ namespace DbManager
 
             //Note: The parsing of CREATE TABLE should accept empty columns "()"
             //And then, an execution error should be given if a CreateTable without columns is executed
-            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[A-Za-z][A-Za-z0-9]*)\s*\(\s*(?<column_defs>(?:[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT)\s*(?:,\s*[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT)\s*)*)?)\s*\)\s*;?\s*$";
+            const string createTablePattern = @"^CREATE\s+TABLE\s+(?<table>[A-Za-z][A-Za-z0-9]*)\s+\(\s*(?<column_defs>(?:[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT)\s*(?:,\s*[A-Za-z][A-Za-z0-9]*\s+(?:INT|DOUBLE|TEXT)\s*)*)?)\s*\)\s*;?\s*$";
 
             const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<set_columns>(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+')(,(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+'))*)*\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<value>\'-?\d+(?<decimals>\.\d+)?\'|'[^']+')$";
 
