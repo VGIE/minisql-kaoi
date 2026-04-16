@@ -21,22 +21,48 @@ namespace DbManager.Security
         public bool IsUserAdmin()
         {
             //TODO DEADLINE 5: Return true if the user logged-in (m_username) is the admin, false otherwise
-            
+            if (m_username == "admin")
+                return true;
+
             return false;
         }
 
         public bool IsPasswordCorrect(string username, string password)
         {
             //TODO DEADLINE 5: Return true if the user's password is correct. The given password should be encrypted before comparing with the saved one
-            
-            return false;
-            
+            User user = UserByName(username);
+            if (user == null)
+                return false;
+            password = Encryption.Encrypt(password);
+            if (user.EncryptedPassword == password)
+                return true;
+            return false; 
         }
 
         public void GrantPrivilege(string profileName, string table, Privilege privilege)
         {
             //TODO DEADLINE 5: Add this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
+
+            if(!IsUserAdmin())
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(profileName) || string.IsNullOrEmpty(table) || privilege == null)
+            {
+                return;
+            }
+
+            if(IsUserAdmin() && IsGrantedPrivilege(profileName, table, privilege))
+            {
+                Profile profile = ProfileByName(profileName);
+                if((profile != null) || (table != null))
+                {
+                    profile.GrantPrivilege(table, privilege);
+                }
+                
+            }
             
         }
 
