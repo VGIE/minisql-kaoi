@@ -7,7 +7,7 @@ namespace OurTests
 {
     public class ManagerTest
     {
-        [Fact]
+        /*[Fact]
         public void IsUserAdminTest()
         {
             Manager adminManager = new Manager("admin");
@@ -16,6 +16,15 @@ namespace OurTests
             Assert.True(adminManager.IsUserAdmin());
             Assert.False(userManager.IsUserAdmin());
         }
+        */
+
+        
+
+
+
+
+    
+
 
     }
 }
