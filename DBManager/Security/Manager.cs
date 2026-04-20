@@ -21,8 +21,11 @@ namespace DbManager.Security
         public bool IsUserAdmin()
         {
             //TODO DEADLINE 5: Return true if the user logged-in (m_username) is the admin, false otherwise
-            if (m_username == "admin")
+            Profile profile = ProfileByUser(m_username);
+            if(profile != null && profile.Name == Profile.AdminProfileName)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -54,14 +57,11 @@ namespace DbManager.Security
                 return;
             }
 
-            if(IsUserAdmin() && IsGrantedPrivilege(profileName, table, privilege))
+            Profile profile = ProfileByName(profileName);
+
+            if (profile != null && table != null)
             {
-                Profile profile = ProfileByName(profileName);
-                if((profile != null) || (table != null))
-                {
-                    profile.GrantPrivilege(table, privilege);
-                }
-                
+                profile.GrantPrivilege(table, privilege);
             }
             
         }
@@ -77,14 +77,32 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Return true if the username has this privilege on this table. False otherwise (also in case of error)
             
-            return false;
+            if(username == null || table == null || privilege == null)
+                return false;
+            
+
+            Profile profile = ProfileByUser(username);
+
+            if(profile == null)
+                return false;
+            
+            if(profile.Name == Profile.AdminProfileName)
+                return true;
+
+            return profile.IsGrantedPrivilege(table, privilege);
             
         }
 
         public void AddProfile(Profile profile)
         {
             //TODO DEADLINE 5: Add this profile
-            
+            if(IsUserAdmin())
+            {
+                if(profile != null)
+                {
+                    Profiles.Add(profile);
+                }
+            }
         }
 
         public User UserByName(string username)
