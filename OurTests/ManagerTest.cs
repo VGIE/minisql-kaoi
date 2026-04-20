@@ -81,6 +81,20 @@ namespace OurTests
             Assert.True(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
 
         }
+
+        [Fact]
+        public void AddProfileTest()
+        {
+            Manager manager = new Manager("Admin");
+            Profile admin = new Profile { Name = Profile.AdminProfileName };
+            User useradmin = new User { Username = "Admin" };
+            admin.Users.Add(useradmin);
+            manager.Profiles.Add(admin);
+            
+            Profile newProfile = new Profile { Name = "NewProfile" };
+            manager.AddProfile(newProfile);
+            Assert.Contains(newProfile, manager.Profiles);
+        }
         /*
         [Fact]
         public void UserByNameTest()
