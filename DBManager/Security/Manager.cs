@@ -70,7 +70,25 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Remove this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
-            
+            if(!IsUserAdmin())
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(profileName) || string.IsNullOrEmpty(table))
+            {
+                return;
+            }
+
+            if(IsUserAdmin() && IsGrantedPrivilege(profileName, table, privilege))
+            {
+                Profile profile = ProfileByName(profileName);
+                if((profile != null) || (table != null))
+                {
+                    profile.RevokePrivilege(table, privilege);
+                }
+                
+            }
         }
 
         public bool IsGrantedPrivilege(string username, string table, Privilege privilege)

@@ -81,6 +81,26 @@ namespace OurTests
             Assert.True(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
 
         }
+        [Fact]
+        public void RevokePrivilegeTest()
+        {
+            User adminUser = new User { Username = "admin" };
+            Profile adminProfile = new Profile { Name = Profile.AdminProfileName };
+            adminProfile.Users.Add(adminUser);
+            
+            User normalUser = new User { Username = "user" };
+            Profile userProfile = new Profile { Name = "UserProfile" };
+            userProfile.Users.Add(normalUser);
+
+            Manager manager = new Manager("admin");
+            manager.Profiles.Add(adminProfile);
+            manager.Profiles.Add(userProfile);
+
+            string tableName = "table1";
+            manager.RevokePrivilege("UserProfile",tableName, Privilege.Select);
+            Assert.False(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
+
+        }
         /*
         [Fact]
         public void UserByNameTest()
