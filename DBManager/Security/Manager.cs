@@ -196,7 +196,48 @@ namespace DbManager.Security
         public void Save(string databaseName)
         {
             //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
-            
+            try
+            {
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+                Directory.CreateDirectory(folder);
+
+                string securityFile = Path.Combine(folder, "manager.txt");
+
+                using (TextWriter tw = File.CreateText(securityFile))
+                {
+                    foreach (Profile p in Profiles)
+                    {
+                        tw.WriteLine(p.Name);
+
+                        foreach (string table in p.PrivilegesOn.Keys)
+                        {
+                            string privLine = table + "=";
+                            bool first = true;
+                            foreach (Privilege priv in p.PrivilegesOn[table])
+                            {
+                                if (!first)
+                                    privLine += "|";
+                                privLine += priv.ToString();
+                                first = false;
+                            }
+                            tw.WriteLine(privLine);
+                        }
+
+                        tw.WriteLine("Users:");
+
+                        foreach (User u in p.Users)
+                        {
+                            tw.WriteLine(u.Username + ":" + u.EncryptedPassword);
+                        }
+
+                        tw.WriteLine("-------");
+                    }
+                }
+            }
+            catch
+            {
+                return;
+            }
         }
     }
 }
