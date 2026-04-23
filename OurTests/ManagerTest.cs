@@ -133,7 +133,7 @@ namespace OurTests
 
         }
 
-        */
+        
         [Fact]
         public void testRemoveProfileValidAdmin()
         {
