@@ -134,6 +134,22 @@ namespace OurTests
         }
 
         
+        [Fact]
+        public void testRemoveProfileValidAdmin()
+        {
+            Manager manager = new Manager("Admin");
+            Profile profile = new Profile { Name = Profile.AdminProfileName };
+            User u = new User("Admin", "1234");
+            profile.Users.Add(u);
+            manager.Profiles.Add(profile);
+
+            bool result = manager.RemoveProfile(Profile.AdminProfileName);
+
+            Assert.True(result);
+            Assert.Empty(manager.Profiles);
+            Assert.Null(manager.ProfileByName("TestProfile"));
+        }
 
     }
+
 }

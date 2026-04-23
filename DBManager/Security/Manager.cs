@@ -171,7 +171,17 @@ namespace DbManager.Security
 
         public bool RemoveProfile(string profileName)
         {
-            //TODO DEADLINE 5: Remove this profile
+            //TODO DEADLINE 5: Remove this profile Ainhoa
+            if(!IsUserAdmin())
+            { 
+                return false; 
+            }
+            var prof = ProfileByName(profileName);
+            if (prof != null)
+            {
+                return Profiles.Remove(prof);
+            }
+
             return false;
         }
 

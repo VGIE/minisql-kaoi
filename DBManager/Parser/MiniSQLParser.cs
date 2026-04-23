@@ -198,6 +198,18 @@ namespace DbManager
             }
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
+            else if(Regex.IsMatch(miniSQLQuery, createSecurityProfilePattern))
+            {
+                Match match= Regex.Match(miniSQLQuery,createSecurityProfilePattern);
+                string profileName = match.Groups[1].Value;
+                return new CreateSecurityProfile(profileName);
+            }
+            else if(Regex.IsMatch(miniSQLQuery,dropSecurityProfilePattern))
+            {
+                Match match = Regex.Match(miniSQLQuery, createSecurityProfilePattern);
+                string profileName = match.Groups[1].Value;
+                return new DropSecurityProfile(profileName);
+            }
             else if (Regex.IsMatch(miniSQLQuery, grantPattern))
             {
                 Match match = Regex.Match(miniSQLQuery, grantPattern);
@@ -216,14 +228,22 @@ namespace DbManager
 
                 return new Revoke(privilegeType, tableName, securityProfile);
             }
-            else if (Regex.IsMatch(miniSQLQuery,deleteUserPattern))
+            else if (Regex.IsMatch(miniSQLQuery, addUserPattern))
+            {
+                Match match = Regex.Match(miniSQLQuery, addUserPattern);
+                string userName = match.Groups[1].Value;
+                string password = match.Groups[2].Value;
+                string securityProfile = match.Groups[3].Value;
+                return new AddUser(userName, password, securityProfile);
+            }
+            else if (Regex.IsMatch(miniSQLQuery, deleteUserPattern))
             {
                 Match match = Regex.Match(miniSQLQuery, deleteUserPattern);
                 string user = match.Groups["user"].Value;
                 return new DeleteUser(user);
             }
 
-            return null;
+                return null;
 
         }
 
