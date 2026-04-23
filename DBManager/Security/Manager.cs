@@ -161,10 +161,60 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Load all the profiles and users saved for this database. The Manager instance should be created with the given username
             
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+                string filePath = Path.Combine(path, "Manager.txt");
+
+                Manager manager = new Manager(username);
+
+                if(!File.Exists(filePath))
+                    return manager;
+                
+                
+                using (TextReader reader = File.OpenText(filePath))
+                {
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if(string.IsNullOrWhiteSpace(line))
+                            continue;
+                        
+                        Profile profile = new Profile();
+                        profile.Name = line;
+
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (string.IsNullOrWhiteSpace(line))
+                                continue;
+
+                            string[] parts = line.Split(' ');
+
+                            if (parts.Length == 2)
+                            {
+                                User user = new User
+                                {
+                                    Username = parts[0],
+                                    EncryptedPassword = parts[1]
+                                };
+
+                                profile.Users.Add(user);
+                            }
+                        }
+
+                        manager.Profiles.Add(profile);
+                    }                          
+                }           
             
-            return null;
+                return manager;
             
-        }
+            }
+            catch
+            {
+                return null;
+            }
+    }
 
         public void Save(string databaseName)
         {
