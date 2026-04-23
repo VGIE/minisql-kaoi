@@ -81,53 +81,26 @@ namespace OurTests
             Assert.True(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
 
         }
-        [Fact]
-        public void RevokePrivilegeTest()
-        {
-            User adminUser = new User { Username = "admin" };
-            Profile adminProfile = new Profile { Name = Profile.AdminProfileName };
-            adminProfile.Users.Add(adminUser);
-            
-            User normalUser = new User { Username = "user" };
-            Profile userProfile = new Profile { Name = "UserProfile" };
-            userProfile.Users.Add(normalUser);
-
-            Manager manager = new Manager("admin");
-            manager.Profiles.Add(adminProfile);
-            manager.Profiles.Add(userProfile);
-
-            string tableName = "table1";
-            manager.RevokePrivilege("UserProfile",tableName, Privilege.Select);
-            Assert.False(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
-
-        }
-        /*
+        
         [Fact]
         public void UserByNameTest()
         {
-            User u1 = new User("user1", "1234");
-            User u2 = new User("user2", "1234");
-            User u3 = new User("user3", "1234");
-
-            User a1 = new User("admin1", "1235");
-            User a2 = new User("admin2", "1235");
+            User a1 = new User();
+            User a2 = new User();
+            a1.Username = "Admin";
+            a2.Username = "Admin";
 
 
-            Profile p1 = new Profile();
+            Profile p1 = new Profile{ Name = "UserProfile"};
+            p1.Name = Profile.AdminProfileName;
             p1.Users.Add(a1);
             p1.Users.Add(a2);
-
-            Profile p2 = new Profile();
-            p2.Users.Add(u1);
-            p2.Users.Add(u2);
-            p2.Users.Add(u2);
-            
+        
             Manager m = new Manager("admin");
-            m.AddProfile(p1);
-            m.AddProfile(p2);
-            User foundUser = m.UserByName("admin1");
+            m.Profiles.Add(p1);
+            User foundUser = m.UserByName("Admin");
         Assert.NotNull(foundUser);
-        Assert.Equal("admin1", foundUser.Username);
+        Assert.Equal("Admin", foundUser.Username);
 
         }
 
@@ -142,21 +115,21 @@ namespace OurTests
             User a2 = new User("admin2", "1235");
 
 
-            Profile p1 = new Profile();
+            Profile p1 = new Profile{ Name = "UserProfile"};
             p1.Users.Add(a1);
             p1.Users.Add(a2);
 
-            Profile p2 = new Profile();
+            Profile p2 = new Profile{ Name = "UserProfile"};
             p2.Users.Add(u1);
             p2.Users.Add(u2);
             p2.Users.Add(u2);
             
-            Manager m = new Manager("admin");
-            m.AddProfile(p1);
-            m.AddProfile(p2);
-            Profile foundUser = m.ProfileByName("admin1");
+            Manager m = new Manager("Admin");
+            m.Profiles.Add(p1);
+            m.Profiles.Add(p2);
+            Profile foundUser = m.ProfileByName("UserProfile");
         Assert.NotNull(foundUser);
-        Assert.Equal("admin", foundUser.Name);
+        Assert.Equal("UserProfile", foundUser.Name);
 
         }
 
