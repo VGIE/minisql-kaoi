@@ -12,6 +12,7 @@ namespace SecurityParsingTests
     public class AddUserTests
     {
         [Fact]
+        [Fact]
         public void Correct()
         {
             AddUser query = MiniSQLParser.Parse("ADD USER (user,password,profile)") as AddUser;
