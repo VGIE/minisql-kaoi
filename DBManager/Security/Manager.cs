@@ -192,7 +192,7 @@ namespace DbManager.Security
             try
             {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
-                string filePath = Path.Combine(path, "Manager.txt");
+                string filePath = Path.Combine(path, "manager.txt");
 
                 Manager manager = new Manager(username);
 
