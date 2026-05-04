@@ -20,8 +20,19 @@ namespace DbManager
         {
             //TODO DEADLINE 5: Run the query and return the appropriate message
             //UsersProfileIsNotGrantedRequiredPrivilege, CreateSecurityProfileSuccess
-            
-            return null;
+            if(database == null)
+            {
+                return Constants.Error;
+            }
+            if(!database.IsUserAdmin())
+            {
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+            }
+            else
+            {
+                database.SecurityManager.Profiles.Add(new Security.Profile{Name = this.ProfileName});
+                return Constants.CreateSecurityProfileSuccess;
+            }
             
         }
 

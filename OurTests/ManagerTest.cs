@@ -81,6 +81,20 @@ namespace OurTests
             Assert.True(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
 
         }
+
+        [Fact]
+        public void AddProfileTest()
+        {
+            Manager manager = new Manager("Admin");
+            Profile admin = new Profile { Name = Profile.AdminProfileName };
+            User useradmin = new User { Username = "Admin" };
+            admin.Users.Add(useradmin);
+            manager.Profiles.Add(admin);
+            
+            Profile newProfile = new Profile { Name = "NewProfile" };
+            manager.AddProfile(newProfile);
+            Assert.Contains(newProfile, manager.Profiles);
+        }
         
         [Fact]
         public void UserByNameTest()
@@ -148,6 +162,38 @@ namespace OurTests
             Assert.True(result);
             Assert.Empty(manager.Profiles);
             Assert.Null(manager.ProfileByName("TestProfile"));
+        }
+
+        [Fact]
+        public void testSaveAndLoadProfiles()
+        {
+            string dbName = "TestDatabase_SaveLoad";
+
+            Manager originalManager = new Manager("admin");
+            
+            Profile adminProfile = new Profile { Name = Profile.AdminProfileName };
+
+            User adminUser = new User();
+            adminUser.Username = "admin";
+            adminUser.EncryptedPassword = Encryption.Encrypt("123"); 
+            
+            adminProfile.Users.Add(adminUser);
+
+            adminProfile.GrantPrivilege("table1", Privilege.Select);
+            adminProfile.GrantPrivilege("table1", Privilege.Insert);
+            
+            originalManager.Profiles.Add(adminProfile);
+
+            originalManager.Save(dbName);
+
+            Manager loadedManager = Manager.Load(dbName, "admin");
+
+            Assert.NotNull(loadedManager);
+            Profile loadedProfile = loadedManager.Profiles[0];
+            Assert.Equal(Profile.AdminProfileName, loadedProfile.Name);
+            Assert.Equal("admin", loadedProfile.Users[0].Username);
+            Assert.Equal(Encryption.Encrypt("123"), loadedProfile.Users[0].EncryptedPassword);
+            Assert.True(loadedProfile.PrivilegesOn.ContainsKey("table1"));
         }
 
     }

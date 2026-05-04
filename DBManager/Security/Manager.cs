@@ -70,20 +70,15 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Remove this privilege on this table to the profile with this name
             //If the profile or the table don't exist, do nothing
-            if(!IsUserAdmin())
-            {
-                return;
-            }
-
             if (string.IsNullOrEmpty(profileName) || string.IsNullOrEmpty(table))
             {
                 return;
             }
 
-            if(IsUserAdmin() && IsGrantedPrivilege(profileName, table, privilege))
+            if(IsUserAdmin())
             {
                 Profile profile = ProfileByName(profileName);
-                if((profile != null) || (table != null))
+                if((profile != null) && (table != null))
                 {
                     profile.RevokePrivilege(table, privilege);
                 }
@@ -189,14 +184,127 @@ namespace DbManager.Security
         {
             //TODO DEADLINE 5: Load all the profiles and users saved for this database. The Manager instance should be created with the given username
             
-            return null;
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+                string filePath = Path.Combine(path, "manager.txt");
+
+                Manager manager = new Manager(username);
+
+                if(!File.Exists(filePath))
+                    return manager;
+                
+                
+                using (TextReader reader = File.OpenText(filePath))
+                {
+                    string line;
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if(string.IsNullOrWhiteSpace(line))
+                            continue;
+                        
+                        Profile profile = new Profile();
+                        profile.Name = line;
+
+                        while ((line = reader.ReadLine()) != null && line != "Users:")
+                        {
+                            if (string.IsNullOrWhiteSpace(line))
+                                continue;
+
+                            string[] parts = line.Split('=');
+
+                            if (parts.Length == 2)
+                            {
+                                string table = parts[0].Trim();
+                                string[] privileges = parts[1].Split('|');
+
+                                foreach (string privilege in privileges)
+                                {
+                                    if (Enum.TryParse(privilege.Trim(), out Privilege parsedPrivilege))
+                                    {
+                                        profile.GrantPrivilege(table, parsedPrivilege);
+                                    }
+                                }
+                            }
+                        }
+
+                        while ((line = reader.ReadLine()) != null && line != "-------")
+                        {
+                            if (string.IsNullOrWhiteSpace(line))
+                                continue;
+
+                            string[] parts = line.Split(':');
+
+                            if (parts.Length == 2)
+                            {
+                                User user = new User
+                                {
+                                    Username = parts[0],
+                                    EncryptedPassword = parts[1]
+                                };
+
+                                profile.Users.Add(user);
+                            }
+                        }   
+                        manager.Profiles.Add(profile);                      
+                    }
+                }           
             
-        }
+                return manager;
+            
+            }
+            catch
+            {
+                return null;
+            }
+    }
 
         public void Save(string databaseName)
         {
             //TODO DEADLINE 5: Save all the profiles and users/passwords created for this database.
-            
+            try
+            {
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
+                Directory.CreateDirectory(folder);
+
+                string securityFile = Path.Combine(folder, "manager.txt");
+
+                using (TextWriter tw = File.CreateText(securityFile))
+                {
+                    foreach (Profile p in Profiles)
+                    {
+                        tw.WriteLine(p.Name);
+
+                        foreach (string table in p.PrivilegesOn.Keys)
+                        {
+                            string privLine = table + "=";
+                            bool first = true;
+                            foreach (Privilege priv in p.PrivilegesOn[table])
+                            {
+                                if (!first)
+                                    privLine += "|";
+                                privLine += priv.ToString();
+                                first = false;
+                            }
+                            tw.WriteLine(privLine);
+                        }
+
+                        tw.WriteLine("Users:");
+
+                        foreach (User u in p.Users)
+                        {
+                            tw.WriteLine(u.Username + ":" + u.EncryptedPassword);
+                        }
+
+                        tw.WriteLine("-------");
+                    }
+                }
+            }
+            catch
+            {
+                return;
+            }
         }
     }
 }
