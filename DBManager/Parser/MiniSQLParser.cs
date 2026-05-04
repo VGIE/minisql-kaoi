@@ -26,7 +26,6 @@ namespace DbManager
             const string updateTablePattern = @"^UPDATE\s+(?<table>\w+)\s+SET\s+(?<set_columns>(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+')(,(\w+)(=)(\'-?\d+(\.\d+)?\'|'[^']+'))*)*\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<value>\'-?\d+(?<decimals>\.\d+)?\'|'[^']+')$";
 
             const string deletePattern = @"^DELETE\s+FROM\s+(?<table>\w+)\s+WHERE\s+(?<columnName>\w+)(?<operator>=|<|>)(?<literalValue>\'-?\d+(?<values>\.\d+)?\'|'[^']+')$";
-            //espacio despues y antes de la coma, no deberia aceptarlos
 
             //TODO DEADLINE 4
             const string createSecurityProfilePattern = @"^CREATE\s+SECURITY\s+PROFILE\s+([A-Za-z][A-Za-z0-9]*)\s*;?\s*$";
@@ -196,17 +195,18 @@ namespace DbManager
                 return new Delete(tableName, new Condition(column, op, literalValue));
 
             }
+
             //TODO DEADLINE 4
             //Do the same for the security queries (CREATE SECURITY PROFILE, ...)
-            else if(Regex.IsMatch(miniSQLQuery, createSecurityProfilePattern))
+            else if (Regex.IsMatch(miniSQLQuery, createSecurityProfilePattern))
             {
-                Match match= Regex.Match(miniSQLQuery,createSecurityProfilePattern);
+                Match match = Regex.Match(miniSQLQuery, createSecurityProfilePattern);
                 string profileName = match.Groups[1].Value;
                 return new CreateSecurityProfile(profileName);
             }
-            else if(Regex.IsMatch(miniSQLQuery,dropSecurityProfilePattern))
+            else if (Regex.IsMatch(miniSQLQuery, dropSecurityProfilePattern))
             {
-                Match match = Regex.Match(miniSQLQuery, createSecurityProfilePattern);
+                Match match = Regex.Match(miniSQLQuery, dropSecurityProfilePattern); 
                 string profileName = match.Groups[1].Value;
                 return new DropSecurityProfile(profileName);
             }
