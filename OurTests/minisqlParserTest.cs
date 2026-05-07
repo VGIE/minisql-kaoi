@@ -126,6 +126,18 @@ namespace OurTests
             Assert.Contains("Name", select3.Columns);
             Assert.Contains("Age", select3.Columns);
             Assert.Equal("Name", select3.Where.ColumnName);
+
+            
+        }
+
+        [Fact]
+        public void selectIncorrectWhereWithoutCommas()
+        {
+            Select select4 = MiniSQLParser.Parse("SELECT Name,Age FROM TestTable WHERE Name=Maider") as Select;
+            Assert.Null(select4);
+
+            Select select1 = MiniSQLParser.Parse("SELECT Name,Age FROM TestTable WHERE Age=25") as Select;
+             
         }
 
 

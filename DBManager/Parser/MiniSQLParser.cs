@@ -60,6 +60,12 @@ namespace DbManager
                     string condcloumn = match.Groups["colName"].Value;
                     string op = match.Groups["operator"].Value;
                     string values = match.Groups["Value"].Value;
+                    
+                        if (!values.StartsWith("'") || !values.EndsWith("'"))
+                        {
+                            return null;
+                        }
+                    
                     if (Regex.IsMatch(values, @"^'.*'$"))
                     {
                         values = values.Trim('\'');
