@@ -19,7 +19,7 @@ namespace DbManager.Network
         public bool Connect(string ipAddress, int port)
         {
             //DEADLINE 6: Connect the tcp client to the given ip/port
-            //Return false if something goes wrong, true otherwise (try/catch)
+            //Return false if something goes wrong, true otherwise (try/catch) ainhoa
             
             return false;
             
@@ -30,7 +30,7 @@ namespace DbManager.Network
             //DEADLINE 6: Send a string to the server, read the answer and return it.
             //Here, we do not do any Xml formatting, we just send the string as it comes and return the string as it comes
             //This private method should be used from Open/SendQuery/Close
-            //Have a look at the project ClientConsole to see how we can use the TcpClient class
+            //Have a look at the project ClientConsole to see how we can use the TcpClient class ainhoa
             
             return null;
             

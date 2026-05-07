@@ -163,6 +163,55 @@ namespace OurTests
             Assert.Empty(manager.Profiles);
             Assert.Null(manager.ProfileByName("TestProfile"));
         }
+        [Fact]
+        public void testRemoveNoAdmin()
+        {
+            Manager manager = new Manager("NormalUser");
+            Profile profile = new Profile { Name = "TestProfile" };
+            User u = new User("NormalUser", "1234");
+            profile.Users.Add(u);
+            manager.Profiles.Add(profile);
+
+            bool result = manager.RemoveProfile("TestProfile");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void testRemoveProfileDoesNotExist()
+        {
+            Manager manager = new Manager("Admin");
+            Profile profile = new Profile { Name = Profile.AdminProfileName };
+            User u = new User("Admin", "1234");
+            profile.Users.Add(u);
+            manager.Profiles.Add(profile);
+
+            bool result = manager.RemoveProfile("NonExistentProfile");
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void testRemoveWithEmptyProfile()
+        {
+            Manager manager = new Manager("Admin");
+            bool result = manager.RemoveProfile("AnyProfile");
+
+            Assert.False(result);
+            Assert.Empty(manager.Profiles);
+        }
+
+        [Fact]
+        public void testRemoveProfileWithNullProfileName()
+        {
+            Manager manager = new Manager("Admin");
+            Profile adminProfile = new Profile { Name = Profile.AdminProfileName };
+            User adminUser = new User("Admin", "1234");
+            adminProfile.Users.Add(adminUser);
+            manager.Profiles.Add(adminProfile);
+            bool result = manager.RemoveProfile(null);
+            Assert.False(result);
+        }
 
         [Fact]
         public void testSaveAndLoadProfiles()
