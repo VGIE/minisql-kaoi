@@ -126,6 +126,18 @@ namespace OurTests
             Assert.Contains("Name", select3.Columns);
             Assert.Contains("Age", select3.Columns);
             Assert.Equal("Name", select3.Where.ColumnName);
+
+            
+        }
+
+        [Fact]
+        public void selectIncorrectWhereWithoutCommas()
+        {
+            Select select4 = MiniSQLParser.Parse("SELECT Name,Age FROM TestTable WHERE Name=Maider") as Select;
+            Assert.Null(select4);
+
+            Select select1 = MiniSQLParser.Parse("SELECT Name,Age FROM TestTable WHERE Age=25") as Select;
+             
         }
 
 
@@ -345,13 +357,13 @@ namespace OurTests
         [Fact]
         public void GrantInvalidPrivilegeTest()
         {
-            var grant = MiniSQLParser.Parse("GRANT INVALID ON TestTable TO User") as Grant;
+            var grant = MiniSQLParser.Parse("GRANT INVALID TestTable TO User") as Grant;
             Assert.Null(grant);
         }
 
 
         [Fact]
-        public void GrantInvalidProfileNameTest()
+        public void GrantInvalidNameTest()
         {
             var grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable TO User_1") as Grant;
             Assert.Null(grant);
@@ -420,7 +432,7 @@ namespace OurTests
         }
 
         [Fact]
-        public void DeleteUserTestWithMultipleSpaces()
+        public void DeleteUserTestWithSpaces0()
         {
             DeleteUser delete = MiniSQLParser.Parse("DELETE    USER   Kevin") as DeleteUser;
             Assert.NotNull(delete);
@@ -428,76 +440,133 @@ namespace OurTests
         }
 
         [Fact]
-        public void DeleteUserTestWithOutUserName()
+        public void DeleteUserTestWithoutUsername()
         {
             DeleteUser delete = MiniSQLParser.Parse("DELETE USER") as DeleteUser;
             Assert.Null(delete);
         }
 
+        [Fact]
+        public void CreateSecurityTestValid()
+        {
+            CreateSecurityProfile create = MiniSQLParser.Parse("CREATE SECURITY PROFILE AdminProfile") as CreateSecurityProfile;
+            Assert.NotNull(create);
+            Assert.Equal("AdminProfile", create.ProfileName);
+        }
+
+        [Fact]
+        public void CreateSecurityTestWithSpaces()
+        {
+            CreateSecurityProfile create = MiniSQLParser.Parse("CREATE    SECURITY    PROFILE    UserProfile") as CreateSecurityProfile;
+            Assert.NotNull(create);
+            Assert.Equal("UserProfile", create.ProfileName);
+        }
+
+        [Fact]
+        public void CreateSecurityTestInvalidName()
+        {
+            var create = MiniSQLParser.Parse("CREATE SECURITY PROFILE 123Profile") as CreateSecurityProfile;
+            Assert.Null(create);
+        }
+
+        [Fact]
+        public void CreateSecurityTestMissingName()
+        {
+            var create = MiniSQLParser.Parse("CREATE SECURITY PROFILE") as CreateSecurityProfile;
+            Assert.Null(create);
+        }
+
+        [Fact]
+        public void DropSecurityTestValid()
+        {
+            DropSecurityProfile drop = MiniSQLParser.Parse("DROP SECURITY PROFILE AdminProfile") as DropSecurityProfile;
+            Assert.NotNull(drop);
+            Assert.Equal("AdminProfile", drop.ProfileName);
+        }
+
+        [Fact]
+        public void DropSecurityTestWithSpaces()
+        {
+            DropSecurityProfile drop = MiniSQLParser.Parse("DROP    SECURITY    PROFILE    UserProfile") as DropSecurityProfile;
+            Assert.NotNull(drop);
+            Assert.Equal("UserProfile", drop.ProfileName);
+        }
 
 
+        [Fact]
+        public void DropSecurityTestInvalidName()
+        {
+            var drop = MiniSQLParser.Parse("DROP SECURITY PROFILE 123Profile") as DropSecurityProfile;
+            Assert.Null(drop);
+        }
 
-        /*
-                [Fact]
-                public void GrantSelectTest()
-                {
-                    Grant grant = MiniSQLParser.Parse("GRANT SELECT ON TestTable TO Admin") as Grant;
-                    Assert.NotNull(grant);
-                    Assert.Equal("SELECT", grant.PrivilegeName);
-                    Assert.Equal("TestTable", grant.TableName);
-                    Assert.Equal("Admin", grant.ProfileName);
-                }
+        [Fact]
+        public void AddUserTestValid()
+        {
+            AddUser addUser = MiniSQLParser.Parse("ADD USER (john, password123, UserProfile)") as AddUser;
+            Assert.NotNull(addUser);
+            Assert.Equal("john", addUser.Username);
+            Assert.Equal("password123", addUser.Password);
+        }
 
-                [Fact]
-                public void GrantInsertTest()
-                {
-                    Grant grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable TO Admin") as Grant;
-                    Assert.NotNull(grant);
-                    Assert.Equal("INSERT", grant.PrivilegeName);
-                    Assert.Equal("TestTable", grant.TableName);
-                    Assert.Equal("Admin", grant.ProfileName);
-                }
+        [Fact]
+        public void AddUserTestWithSpaces()
+        {
+            AddUser addUser = MiniSQLParser.Parse("ADD USER ( john , pass123 , AdminProfile )") as AddUser;
+            Assert.NotNull(addUser);
+            Assert.Equal("john", addUser.Username);
+            Assert.Equal("pass123", addUser.Password);
+        }
 
-                [Fact]
-                public void GrantDeleteTest()
-                {
-                    Grant grant = MiniSQLParser.Parse("GRANTDELETE ON TestTable TO UserOne") as Grant;
-                    Assert.NotNull(grant);
-                    Assert.Equal("DELETE", grant.PrivilegeName);
-                    Assert.Equal("TestTable", grant.TableName);
-                    Assert.Equal("UserOne", grant.ProfileName);
-                }
+        [Fact]
+        public void AddUserTestMissingParameters()
+        {
+            var addUser = MiniSQLParser.Parse("ADD USER (john, password123)") as AddUser;
+            Assert.Null(addUser);
+        }
 
-                [Fact]
-                public void GrantUpdateTest()
-                {
-                    Grant grant = MiniSQLParser.Parse("GRANT UPDATE ON TestTable4 TO UserFourS") as Grant;
-                    Assert.NotNull(grant);
-                    Assert.Equal("UPDATE", grant.PrivilegeName);
-                    Assert.Equal("TestTable4", grant.TableName);
-                    Assert.Equal("UserFourS", grant.ProfileName);
-                }
+        [Fact]
+        public void AddUserTestInvalidUsername()
+        {
+            var addUser = MiniSQLParser.Parse("ADD USER (123user, pass, Profile)") as AddUser;
+            Assert.Null(addUser);
+        }
 
-                [Fact]
-                public void GrantInvalidPrivilegeTest()
-                {
-                    var grant = MiniSQLParser.Parse("GRANT INVALID ON TestTable TO User") as Grant;
-                    Assert.Null(grant);
-                }
+        [Fact]
+        public void AddUserTestInvalidPName()
+        {
+            var addUser = MiniSQLParser.Parse("ADD USER (john, pass, 123Profile)") as AddUser;
+            Assert.Null(addUser);
+        }
 
-                [Fact]
-                public void GrantInvalidTableNameTest()
-                {
-                    var grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable_2n TO User") as Grant;
-                    Assert.Null(grant);
-                }
+        [Fact]
+        public void DeleteUserTestValid1()
+        {
+            DeleteUser delete = MiniSQLParser.Parse("DELETE USER john") as DeleteUser;
+            Assert.NotNull(delete);
+            Assert.Equal("john", delete.Username);
+        }
 
-                [Fact]
-                public void GrantInvalidProfileNameTest()
-                {
-                    var grant = MiniSQLParser.Parse("GRANT INSERT ON TestTable TO User_1") as Grant;
-                    Assert.Null(grant);
-                }
-                */
+        [Fact]
+        public void DeleteUserTestWithSpaces()
+        {
+            DeleteUser delete = MiniSQLParser.Parse("DELETE    USER    john") as DeleteUser;
+            Assert.NotNull(delete);
+            Assert.Equal("john", delete.Username);
+        }
+
+        [Fact]
+        public void DeleteUserTestMissingUsername()
+        {
+            var delete = MiniSQLParser.Parse("DELETE USER") as DeleteUser;
+            Assert.Null(delete);
+        }
+
+        [Fact]
+        public void DeleteUserTestInvalidUsername()
+        {
+            var delete = MiniSQLParser.Parse("DELETE USER 123user") as DeleteUser;
+            Assert.Null(delete);
+        }
     }
 }

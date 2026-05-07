@@ -69,7 +69,7 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("ADD USER (,,)") as AddUser;
             Assert.Null(query);
         }
-        
+       
     }
     
 }
