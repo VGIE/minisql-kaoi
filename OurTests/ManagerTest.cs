@@ -195,7 +195,26 @@ namespace OurTests
             Assert.Equal(Encryption.Encrypt("123"), loadedProfile.Users[0].EncryptedPassword);
             Assert.True(loadedProfile.PrivilegesOn.ContainsKey("table1"));
         }
+        [Fact]
+        public void testRevokePrivilage()
+        {
+            User adminUser = new User { Username = "admin" };
+            Profile adminProfile = new Profile { Name = Profile.AdminProfileName };
+            adminProfile.Users.Add(adminUser);
+            
+            User normalUser = new User { Username = "user" };
+            Profile userProfile = new Profile { Name = "UserProfile" };
+            userProfile.Users.Add(normalUser);
 
+            Manager manager = new Manager("admin");
+            manager.Profiles.Add(adminProfile);
+            manager.Profiles.Add(userProfile);
+
+            string tableName = "table1";
+            manager.GrantPrivilege("UserProfile", tableName, Privilege.Select);
+            manager.RevokePrivilege("UserProfile", tableName, Privilege.Select);
+
+            Assert.False(manager.IsGrantedPrivilege("user", tableName, Privilege.Select));
+        }
     }
-
 }
