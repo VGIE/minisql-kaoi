@@ -26,21 +26,24 @@ namespace DbManager
                 return Constants.Error;
             }
             
-            else if (database.IsUserAdmin() == false)
+            if (!database.IsUserAdmin())
             {
                 return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
             }
+
             Profile p = database.SecurityManager.ProfileByName(ProfileName);
             if (p == null)
             {
                 return Constants.SecurityProfileDoesNotExistError;
             }
+
             bool result = database.SecurityManager.RemoveProfile(ProfileName);
             if (result == true)
             {
                return Constants.DropSecurityProfileSuccess; 
             }
-            return null;
+            
+            return Constants.Error;
             
         }
 
