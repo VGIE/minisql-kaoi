@@ -23,10 +23,16 @@ namespace DbManager.Parser
             Table tabla = database.TableByName(Table);
             if (database==null)
                 return Constants.Error;
-            else if (tabla == null)
+
+            if (database.IsUserAdmin() == false)
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
+            if (tabla == null)
                 return Constants.TableDoesNotExistError;
-            else if(database.DeleteWhere(Table, Where))
+
+            if(database.DeleteWhere(Table, Where))
                 return Constants.DeleteSuccess;
+                
             return Constants.Error;          
         }
     }
