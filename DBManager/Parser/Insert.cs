@@ -24,11 +24,21 @@ namespace DbManager
             Table tabla = database.TableByName(Table);
             if (database==null)
                 return Constants.Error;
-            else if (tabla == null)
-                return Constants.TableDoesNotExistError;
-            else if(database.Insert(Table, Values))
-                return Constants.InsertSuccess;
-            return Constants.Error;             
+            if (database.IsUserAdmin())
+            {
+                if (tabla == null)
+                    return Constants.TableDoesNotExistError;
+                else if(database.Insert(Table, Values))
+                    return Constants.InsertSuccess;
+
+                return Constants.Error;
+            }
+            else
+            {
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+            }
+
+                        
         }
     }
 }

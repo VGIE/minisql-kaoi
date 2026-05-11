@@ -28,33 +28,41 @@ namespace DbManager
             }
             else
             {
-                Table t = database.TableByName(Table);
-                if(t == null)
+                if (database.IsUserAdmin())
                 {
-                    return Constants.TableDoesNotExistError;
-                }
-                else
-                {
-                    ColumnDefinition colunm = t.ColumnByName(Where.ColumnName);
-                    if(colunm == null || Where.ColumnName == null)
-                    {
-                        return Constants.ColumnDoesNotExistError;
+                    Table t = database.TableByName(Table);
+                    if(t == null)
+                    {   
+                        return Constants.TableDoesNotExistError;
                     }
-
-                    foreach(SetValue st in Columns)
+                    else
                     {
-                        if(st.ColumnName == null || t.ColumnByName(st.ColumnName) == null)
+                        ColumnDefinition colunm = t.ColumnByName(Where.ColumnName);
+                        if(colunm == null || Where.ColumnName == null)
                         {
                             return Constants.ColumnDoesNotExistError;
                         }
-                    }
-                    bool done =t.Update(Columns, Where);
-                    if(done)
-                    {
-                       return Constants.UpdateSuccess; 
+
+                        foreach(SetValue st in Columns)
+                        {
+                            if(st.ColumnName == null || t.ColumnByName(st.ColumnName) == null)
+                            {
+                                return Constants.ColumnDoesNotExistError;
+                            }
+                        }
+                        bool done =t.Update(Columns, Where);
+                        if(done)
+                        {
+                            return Constants.UpdateSuccess; 
+                        }
                     }
                     return Constants.SyntaxError;
                 }
+                else
+                {
+                    return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+                }
+                
             }
 
         }
