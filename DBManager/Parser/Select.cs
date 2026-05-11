@@ -29,6 +29,9 @@ namespace DbManager
             if (database == null)
                 return Constants.Error;
 
+            if (database.IsUserAdmin() == false)
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
             if (tabla == null)
                 return Constants.TableDoesNotExistError;
 
