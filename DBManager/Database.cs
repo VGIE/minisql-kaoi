@@ -30,7 +30,7 @@ namespace DbManager
         {
             //DEADLINE 1.B: Initalize the member variables
            m_username = adminUsername;
-
+           
         }
 
         public bool AddTable(Table table)
