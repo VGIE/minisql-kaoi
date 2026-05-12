@@ -26,7 +26,10 @@ namespace DbManager
 
             if (tabla == null)
                 return Constants.TableDoesNotExistError;
-
+            if(!database.IsUserAdmin())
+            {
+               return Constants.UsersProfileIsNotGrantedRequiredPrivilege; 
+            }
             if (database.DropTable(Table))
                 return Constants.DropTableSuccess;
 
