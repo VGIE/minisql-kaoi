@@ -39,7 +39,7 @@ namespace DbManager
                 database.SecurityManager.ProfileByName(Username).Users.Remove(u);
                 return Constants.DeleteUserSuccess;
             }
-            
+            return Constants.Error;
         }
 
     }
