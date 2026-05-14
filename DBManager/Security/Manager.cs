@@ -189,11 +189,12 @@ namespace DbManager.Security
                 string path = Path.Combine(Directory.GetCurrentDirectory(), databaseName);
                 string filePath = Path.Combine(path, "manager.txt");
 
-                Manager manager = new Manager(username);
 
                 if(!File.Exists(filePath))
-                    return manager;
+                    return null;
                 
+                    Manager manager = new Manager(username);
+                    bool userFound = false;
                 
                 using (TextReader reader = File.OpenText(filePath))
                 {
@@ -240,17 +241,21 @@ namespace DbManager.Security
                             {
                                 User user = new User
                                 {
-                                    Username = parts[0],
-                                    EncryptedPassword = parts[1]
+                                    Username = parts[0].Trim(),
+                                    EncryptedPassword = parts[1].Trim()
                                 };
 
                                 profile.Users.Add(user);
+
+                                if (user.Username == username)
+                                    userFound = true;
                             }
                         }   
                         manager.Profiles.Add(profile);                      
                     }
-                }           
-            
+                }
+                if (!userFound)
+                    return null;
                 return manager;
             
             }
