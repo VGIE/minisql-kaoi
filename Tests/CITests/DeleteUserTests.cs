@@ -69,7 +69,7 @@ namespace SecurityParsingTests
             query = MiniSQLParser.Parse("DELETE USER User") as DeleteUser;
             Assert.NotNull(query);
         }
-      /*  [Fact]
+        [Fact]
         public void IncorrectUserDoesNotExist()
         {
             Database db = new Database("Admin", "1234");
@@ -106,6 +106,6 @@ namespace SecurityParsingTests
             string result = query.Execute(db);
 
             Assert.Equal(Constants.UserDoesNotExistError, result);
-        }*/
+        }
     }
 }
