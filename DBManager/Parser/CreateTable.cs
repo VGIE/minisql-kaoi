@@ -26,9 +26,13 @@ namespace DbManager
             Table tabla = database.TableByName(Table);
             if (tabla != null)
                 return Constants.TableAlreadyExistsError;
-            else if (ColumnsParameters == null || ColumnsParameters.Count == 0)
+
+            if (database.IsUserAdmin() == false)
+                return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
+
+            if (ColumnsParameters == null || ColumnsParameters.Count == 0)
                 return Constants.DatabaseCreatedWithoutColumnsError;
-            else if (database.CreateTable(Table, ColumnsParameters))
+            if (database.CreateTable(Table, ColumnsParameters))
                 return Constants.CreateTableSuccess;
             return Constants.Error;
         }

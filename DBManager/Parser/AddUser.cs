@@ -30,20 +30,32 @@ namespace DbManager
             {
                 return Constants.Error;
             }
-            
-            else if (database.IsUserAdmin() == false)
+
+            if (!database.IsUserAdmin())
             {
                 return Constants.UsersProfileIsNotGrantedRequiredPrivilege;
             }
+
             Profile p = database.SecurityManager.ProfileByName(ProfileName);
             if (p == null)
             {
                 return Constants.SecurityProfileDoesNotExistError;
             }
-            User newUser = new User(Username,Password);
+
+            if (database.SecurityManager.UserByName(Username) != null)
+            {
+                return Constants.Error;
+            }
+
+            if (string.IsNullOrEmpty(Password))
+            {
+                return Constants.Error;
+            }
+
+            User newUser = new User(Username, Password);
             p.Users.Add(newUser);
+
             return Constants.AddUserSuccess;
-            
         }
 
     }
